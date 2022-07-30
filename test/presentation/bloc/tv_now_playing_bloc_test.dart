@@ -39,9 +39,10 @@ void main() {
 
   blocTest<TvNowPlayingBloc, TvNowPlayingState>(
     "Test",
-    setUp: () {},
-    build: () {
+    setUp: () {
       when(tvSeries.getNowPlayingTv()).thenAnswer((_) async => Right([testTvSeries]));
+    },
+    build: () {
       return TvNowPlayingBloc(tvSeries);
     },
     act: (bloc) => bloc.add(LoadTvNowPlaying()),
@@ -53,9 +54,10 @@ void main() {
   );
   blocTest<TvNowPlayingBloc, TvNowPlayingState>(
     "Test",
-    setUp: () {},
-    build: () {
+    setUp: () {
       when(tvSeries.getNowPlayingTv()).thenAnswer((_) async => Left(ServerFailure("Error")));
+    },
+    build: () {
       return TvNowPlayingBloc(tvSeries);
     },
     act: (bloc) => bloc.add(LoadTvNowPlaying()),

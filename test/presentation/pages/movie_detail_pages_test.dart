@@ -66,20 +66,26 @@ void main() {
     when(watchListsMovie.isAddWatchlist(id)).thenAnswer((_) async => true);
 
     await tester.pumpWidget(
-      MultiBlocProvider(providers: [
-        BlocProvider<MovieDetailBloc>.value(
-          value: movieDetailBloc,
-        ),
-        BlocProvider<MovieCastBloc>.value(
-          value: movieCastBloc,
-        ),
-        BlocProvider<MovieRecomendationBloc>.value(
-          value: movieRecomendationBloc,
-        ),
-        BlocProvider<MovieWathclistBloc>.value(
-          value: movieWathclistBloc,
-        ),
-      ], child: MaterialApp(home: MovieDetailPage(movie: movieDetail))),
+      MultiBlocProvider(
+          providers: [
+            BlocProvider<MovieDetailBloc>.value(
+              value: movieDetailBloc,
+            ),
+            BlocProvider<MovieCastBloc>.value(
+              value: movieCastBloc,
+            ),
+            BlocProvider<MovieRecomendationBloc>.value(
+              value: movieRecomendationBloc,
+            ),
+            BlocProvider<MovieWathclistBloc>.value(
+              value: movieWathclistBloc,
+            ),
+          ],
+          child: MaterialApp(
+              home: MovieDetailPage(
+            movie: movieDetail,
+            tipe: "tv",
+          ))),
     );
     expect(find.byType(Text), findsWidgets);
   });

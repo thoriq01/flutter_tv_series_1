@@ -1,3 +1,4 @@
+import 'package:dicoding_tv_series/domain/entities/genre.dart';
 import 'package:dicoding_tv_series/domain/entities/tv.dart';
 import 'package:equatable/equatable.dart';
 
@@ -33,7 +34,7 @@ class TvModel extends Equatable {
   factory TvModel.fromJson(Map<String, dynamic> json) => TvModel(
       backdropPath: json['backdrop_path'],
       firstAirDate: json['first_air_date'],
-      genreIds: List<int>.from(json['genre_ids'].map((x) => x)),
+      genreIds: json["genre_ids"] != null ? List<int>.from(json['genre_ids'].map((x) => x)) : null,
       id: json['id'],
       name: json['name'],
       originCountry: List<String>.from(json['origin_country'].map((x) => x)),
@@ -49,7 +50,7 @@ class TvModel extends Equatable {
     return Tv(
       backdropPath: this.backdropPath,
       firstAirDate: this.firstAirDate,
-      genreIds: this.genreIds,
+      genres: this.genreIds,
       originCountry: this.originCountry,
       id: this.id,
       name: this.name,

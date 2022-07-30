@@ -3,6 +3,7 @@ import 'package:dicoding_tv_series/domain/usecase/get_now_playing_movie.dart';
 import 'package:dicoding_tv_series/domain/usecase/get_popular_movie.dart';
 import 'package:dicoding_tv_series/domain/usecase/get_top_rated_movie.dart';
 import 'package:dicoding_tv_series/domain/usecase/search_movie.dart';
+import 'package:dicoding_tv_series/domain/usecase/tv_series.dart';
 import 'package:dicoding_tv_series/domain/usecase/watchlist_movie.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_now_playing_bloc/movie_now_playing_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_popular_bloc/movie_popular_bloc_bloc.dart';
@@ -10,6 +11,9 @@ import 'package:dicoding_tv_series/presentation/bloc/movie_recomendation_bloc/mo
 import 'package:dicoding_tv_series/presentation/bloc/movie_search_bloc/movie_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_now_playing_bloc/tv_now_playing_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/pages/movie_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +22,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import '../bloc/get_popular_movies_bloc.mocks.dart';
+import '../../helpers/test_helper.mocks.dart';
 
 void main() {
   late MockMovieRepository _movieRepository;
@@ -27,7 +31,11 @@ void main() {
   late GetNowPlaying getNowPlayingMoviesBloc;
   late WatchListsMovie watchListsMovie;
   late SearchMovie searchMovie;
+  late TvPopularBloc tvPopularBloc;
+  late TvTopRatedBloc tvTopRatedBloc;
+  late TvNowPlayingBloc tvNowPlayingBloc;
 
+  late TvSeries _tvSeries;
   late MoviePopularBlocBloc _moviePopularBloc;
   late MovieNowPlayingBloc _movieNowPlayingBloc;
   late MovieTopRatedBloc _movieTopRatedBloc;
@@ -41,7 +49,11 @@ void main() {
     getNowPlayingMoviesBloc = GetNowPlaying(_movieRepository);
     watchListsMovie = WatchListsMovie(_movieRepository);
     searchMovie = SearchMovie(_movieRepository);
+    _tvSeries = TvSeries(_movieRepository);
 
+    tvPopularBloc = TvPopularBloc(_tvSeries);
+    tvTopRatedBloc = TvTopRatedBloc(_tvSeries);
+    tvNowPlayingBloc = TvNowPlayingBloc(_tvSeries);
     _moviePopularBloc = MoviePopularBlocBloc(getPopularMoviesBloc);
     _movieNowPlayingBloc = MovieNowPlayingBloc(getNowPlayingMoviesBloc);
     _movieTopRatedBloc = MovieTopRatedBloc(getTopRatedMoviesBloc);
@@ -53,6 +65,10 @@ void main() {
     when(getNowPlayingMoviesBloc.execute()).thenAnswer((_) async => Right(testMovieList));
     when(getTopRatedMoviesBloc.execute()).thenAnswer((_) async => Right(testMovieList));
     when(getPopularMoviesBloc.execute()).thenAnswer((_) async => Right(testMovieList));
+    when(_tvSeries.getNowPlayingTv()).thenAnswer((_) async => Right([testTvSeries]));
+    when(_tvSeries.getPopularTv()).thenAnswer((_) async => Right([testTvSeries]));
+    when(_tvSeries.getTopRatedTv()).thenAnswer((_) async => Right([testTvSeries]));
+
     when(watchListsMovie.getData()).thenAnswer((_) async => Right(testMovieList));
     await tester.pumpWidget(MultiBlocProvider(providers: [
       BlocProvider<MoviePopularBlocBloc>.value(value: _moviePopularBloc),
@@ -60,6 +76,9 @@ void main() {
       BlocProvider<MovieNowPlayingBloc>.value(value: _movieNowPlayingBloc),
       BlocProvider<MovieWathclistBloc>.value(value: _movieWathclistBloc),
       BlocProvider<MovieSearchBloc>.value(value: _movieSearchBloc),
+      BlocProvider<TvTopRatedBloc>.value(value: tvTopRatedBloc),
+      BlocProvider<TvPopularBloc>.value(value: tvPopularBloc),
+      BlocProvider<TvNowPlayingBloc>.value(value: tvNowPlayingBloc),
     ], child: MaterialApp(home: MovieListPage())));
     expect(find.byType(Container), findsWidgets);
   });

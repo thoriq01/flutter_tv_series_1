@@ -159,4 +159,28 @@ class MovieModelRepository implements MovieRepository {
       return Left(ConnectionFailure('Failed to connect to the network'));
     }
   }
+
+  @override
+  Future<Either<Failure, Tv>> getTvDetail(int id) async {
+    final response = await remoteDataSource.getDetailTv(id);
+    try {
+      return Right(response.toEntity());
+    } on ServerException {
+      return Left(ServerFailure("Failed to load tv detail"));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Tv>>> getTvRecomendation(int id) async {
+    final response = await remoteDataSource.getRecomendationTv(id);
+    try {
+      return Right(response.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return Left(ServerFailure("Failed to load tv detail"));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
 }

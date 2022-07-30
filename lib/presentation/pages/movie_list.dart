@@ -6,12 +6,18 @@ import 'package:dicoding_tv_series/presentation/bloc/movie_popular_bloc/movie_po
 import 'package:dicoding_tv_series/presentation/bloc/movie_search_bloc/movie_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_now_playing_bloc/tv_now_playing_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_card.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_now_playing_widget.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_popular_widget.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_toprated_widget.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_watchlist_widget.dart';
 import 'package:dicoding_tv_series/presentation/widget/title_content.dart';
+import 'package:dicoding_tv_series/presentation/widget/tv_now_playing_widget.dart';
+import 'package:dicoding_tv_series/presentation/widget/tv_popular_widget.dart';
+import 'package:dicoding_tv_series/presentation/widget/tv_top_rated_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,6 +40,10 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
     context.read<MovieSearchBloc>().add(RemoveSearchMovieEvent());
     context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
     context.read<MovieNowPlayingBloc>().add(LoadMovieNowPlaying());
+    context.read<TvPopularBloc>().add(LoadTvPopular());
+    context.read<TvTopRatedBloc>().add(LoadTvTopRated());
+    context.read<TvNowPlayingBloc>().add(LoadTvNowPlaying());
+
     controller = TabController(length: 2, vsync: this);
     controller!.index = 1;
   }
@@ -53,8 +63,8 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
             child: TabBarView(
               controller: controller,
               children: [
-                MoviePage(searchMovie: _searchMovie),
-                MoviePage(searchMovie: _searchMovie),
+                MoviePage(tipe: "movie", searchMovie: _searchMovie),
+                MoviePage(tipe: "tv", searchMovie: _searchMovie),
               ],
             ),
           ),
@@ -84,9 +94,11 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
 }
 
 class MoviePage extends StatelessWidget {
+  final String? tipe;
   const MoviePage({
     Key? key,
     required TextEditingController searchMovie,
+    this.tipe,
   })  : _searchMovie = searchMovie,
         super(key: key);
 
@@ -139,7 +151,7 @@ class MoviePage extends StatelessWidget {
                     }
                     return ListTile(
                       onTap: () {
-                        Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie()));
+                        Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie(), tipe!));
                       },
                       leading: Container(
                         child: Image(
@@ -169,31 +181,65 @@ class MoviePage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (state is MovieSearchBlocEmpty) {
-              return Column(
-                children: [
-                  MovieWatchlistWidget(),
-                  TitleContent(
-                    text: "Now Playing",
-                    onPressed: () {
-                      Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("nowplaying"));
-                    },
-                  ),
-                  MovieNowPlayingWidget(),
-                  TitleContent(
-                    text: "Popular",
-                    onPressed: () {
-                      Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("popular"));
-                    },
-                  ),
-                  MoviePopularBlocWidget(),
-                  TitleContent(
-                      text: "Top Movie",
-                      onPressed: () {
-                        Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("topmovie"));
-                      }),
-                  MovieTopRatedWidget(),
-                ],
-              );
+              return Builder(builder: (context) {
+                if (tipe == "movie") {
+                  return Column(
+                    children: [
+                      MovieWatchlistWidget(
+                        tipe: "movie",
+                      ),
+                      TitleContent(
+                        text: "Now Playing",
+                        onPressed: () {
+                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("nowplaying"));
+                        },
+                      ),
+                      MovieNowPlayingWidget(),
+                      TitleContent(
+                        text: "Popular",
+                        onPressed: () {
+                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("popular"));
+                        },
+                      ),
+                      MoviePopularBlocWidget(),
+                      TitleContent(
+                          text: "Top Movie",
+                          onPressed: () {
+                            Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("topmovie"));
+                          }),
+                      MovieTopRatedWidget(),
+                    ],
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      MovieWatchlistWidget(
+                        tipe: "tv",
+                      ),
+                      TitleContent(
+                        text: "Tv Now Playing",
+                        onPressed: () {
+                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("nowplaying"));
+                        },
+                      ),
+                      TvNowPlayingWidget(),
+                      TitleContent(
+                        text: "Tv Now Popular",
+                        onPressed: () {
+                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("popular"));
+                        },
+                      ),
+                      TvPopularWidget(),
+                      TitleContent(
+                          text: "Top Popular",
+                          onPressed: () {
+                            Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("topmovie"));
+                          }),
+                      TvTopRatedWidget(),
+                    ],
+                  );
+                }
+              });
             } else {
               return Center(
                 child: Container(),
@@ -252,6 +298,7 @@ class SearchWidget extends StatelessWidget {
 }
 
 class MovieListCard extends StatelessWidget {
+  final String tipe;
   final int length;
   final List<Movie> movies;
   final bool isScrollable;
@@ -266,6 +313,7 @@ class MovieListCard extends StatelessWidget {
     required this.height,
     required this.isWatchlist,
     this.isScrollable = false,
+    required this.tipe,
   }) : super(key: key);
 
   @override
@@ -279,7 +327,11 @@ class MovieListCard extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(movies[index].movie()));
+              if (tipe == "tv") {
+                Navigator.pushNamed(context, tvDetailPage, arguments: DetailTvArgument(movies[index].movie(), tipe));
+              } else {
+                Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(movies[index].movie(), tipe));
+              }
             },
             child: MovieCard(
               title: movies[index].title,

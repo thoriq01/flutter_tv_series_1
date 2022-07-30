@@ -4,6 +4,9 @@ import 'package:dartz/dartz.dart';
 import 'package:dicoding_tv_series/common/failure.dart';
 import 'package:dicoding_tv_series/data/models/tv_model.dart';
 import 'package:dicoding_tv_series/data/models/tv_response.dart';
+import 'package:dicoding_tv_series/domain/entities/genre.dart';
+import 'package:dicoding_tv_series/domain/entities/movie.dart';
+import 'package:dicoding_tv_series/domain/entities/movie_detail.dart';
 import 'package:dicoding_tv_series/domain/entities/tv.dart';
 import 'package:dicoding_tv_series/domain/usecase/tv_series.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,20 +41,21 @@ void main() {
   });
 
   final testData = TvModel(
-      backdropPath: "/7q448EVOnuE3gVAx24krzO7SNXM.jpg",
-      firstAirDate: "2021-09-03",
-      genreIds: [10764],
-      id: 130392,
-      name: "The D Amelio Show",
-      originCountry: ["US"],
-      originalLanguage: "en",
-      originalName: "The D Amelio Show",
-      overview:
-          "From relative obscurity and a seemingly normal life, to overnight success and thrust into the Hollywood limelight overnight, the D Amelios are faced with new challenges and opportunities they could not have imagined.",
-      popularity: 17.704,
-      posterPath: "/z0iCS5Znx7TeRwlYSd4c01Z0lFx.jpg",
-      voteAverage: 9.4,
-      voteCount: 2750);
+    backdropPath: "/7q448EVOnuE3gVAx24krzO7SNXM.jpg",
+    firstAirDate: "2021-09-03",
+    genreIds: [10764],
+    id: 130392,
+    name: "The D Amelio Show",
+    originCountry: ["US"],
+    originalLanguage: "en",
+    originalName: "The D Amelio Show",
+    overview:
+        "From relative obscurity and a seemingly normal life, to overnight success and thrust into the Hollywood limelight overnight, the D Amelios are faced with new challenges and opportunities they could not have imagined.",
+    popularity: 17.704,
+    posterPath: "/z0iCS5Znx7TeRwlYSd4c01Z0lFx.jpg",
+    voteAverage: 9.4,
+    voteCount: 2750,
+  );
 
   test("Read as json", () async {
     final data = TvResponse([testData]);
@@ -87,5 +91,50 @@ void main() {
       ]
     };
     expect(toJson, jsonData);
+  });
+
+  test("Tv to MovieDetail Entity", () {
+    var data = testData.toEntity();
+    final movieDetail = MovieDetail(
+      backdropPath: "/7q448EVOnuE3gVAx24krzO7SNXM.jpg",
+      releaseDate: "2021-09-03",
+      genres: [],
+      id: 130392,
+      originalTitle: "The D Amelio Show",
+      overview:
+          "From relative obscurity and a seemingly normal life, to overnight success and thrust into the Hollywood limelight overnight, the D Amelios are faced with new challenges and opportunities they could not have imagined.",
+      posterPath: "/z0iCS5Znx7TeRwlYSd4c01Z0lFx.jpg",
+      voteAverage: 9.4,
+      voteCount: 2750,
+      adult: true,
+      runtime: 0,
+      title: "The D Amelio Show",
+    );
+    expect(data.tvToMovieDetail(), movieDetail);
+  });
+
+  test("Tv to Movie", () {
+    var data = testData.toEntity().tvToMovie();
+    var movie = Movie(
+      video: false,
+      genre: [
+        Genre(id: 10, name: "Action"),
+        Genre(id: 12, name: "Movie"),
+      ],
+      backdropPath: "/7q448EVOnuE3gVAx24krzO7SNXM.jpg",
+      releaseDate: "2021-09-03",
+      genreIds: [],
+      id: 130392,
+      title: "The D Amelio Show",
+      originalTitle: "The D Amelio Show",
+      overview:
+          "From relative obscurity and a seemingly normal life, to overnight success and thrust into the Hollywood limelight overnight, the D Amelios are faced with new challenges and opportunities they could not have imagined.",
+      popularity: 60.441,
+      posterPath: "/z0iCS5Znx7TeRwlYSd4c01Z0lFx.jpg",
+      voteAverage: 9.4,
+      voteCount: 2750,
+      adult: true,
+    );
+    expect(data, movie);
   });
 }

@@ -10,7 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MovieDetailPage extends StatefulWidget {
   final MovieDetail? movie;
-  const MovieDetailPage({Key? key, this.movie}) : super(key: key);
+  final String? tipe;
+  const MovieDetailPage({Key? key, this.movie, this.tipe}) : super(key: key);
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();
@@ -260,7 +261,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       itemCount: state.movies.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () => Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie())),
+          onTap: () => Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie(), this.widget.tipe!)),
           child: Column(
             children: [
               Container(

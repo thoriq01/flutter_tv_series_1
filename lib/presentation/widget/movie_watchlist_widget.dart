@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MovieWatchlistWidget extends StatelessWidget {
+  final String tipe;
   const MovieWatchlistWidget({
     Key? key,
+    required this.tipe,
   }) : super(key: key);
 
   @override
@@ -33,6 +35,7 @@ class MovieWatchlistWidget extends StatelessWidget {
                     },
                   ),
                   MovieListCard(
+                    tipe: tipe,
                     length: state.movies.length,
                     isWatchlist: true,
                     isScrollable: true,

@@ -13,6 +13,7 @@ class MovieTopRatedWidget extends StatelessWidget {
     return BlocBuilder<MovieTopRatedBloc, MovieTopRatedState>(builder: (context, state) {
       if (state is MovieTopRatedLoaded) {
         return MovieListCard(
+          tipe: "movie",
           length: 2,
           height: 500,
           isWatchlist: false,

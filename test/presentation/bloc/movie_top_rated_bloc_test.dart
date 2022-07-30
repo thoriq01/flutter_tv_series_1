@@ -10,8 +10,6 @@ import 'package:mockito/mockito.dart';
 import '../../dummy_data/dummy_objects.dart';
 import 'get_popular_movies_bloc.mocks.dart';
 
-class _GetTopRatedMovie extends Mock implements GetTopRatedMovie {}
-
 void main() {
   late MockMovieRepository _movieRepository;
   late GetTopRatedMovie getTopRatedMovie;

@@ -13,6 +13,7 @@ class MoviePopularBlocWidget extends StatelessWidget {
     return BlocBuilder<MoviePopularBlocBloc, MoviePopularBlocState>(builder: (context, state) {
       if (state is MoviePopularLoaded) {
         return MovieListCard(
+          tipe: "movie",
           length: 2,
           height: 500,
           isWatchlist: false,

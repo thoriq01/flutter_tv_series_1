@@ -1,22 +1,23 @@
+import 'package:dicoding_tv_series/domain/entities/genre.dart';
 import 'package:dicoding_tv_series/domain/entities/movie_detail.dart';
 import 'package:equatable/equatable.dart';
 
 class Movie extends Equatable {
-  Movie({
-    required this.adult,
-    required this.backdropPath,
-    required this.genreIds,
-    required this.id,
-    required this.originalTitle,
-    required this.overview,
-    required this.popularity,
-    required this.posterPath,
-    required this.releaseDate,
-    required this.title,
-    required this.video,
-    required this.voteAverage,
-    required this.voteCount,
-  });
+  Movie(
+      {required this.adult,
+      required this.backdropPath,
+      required this.genreIds,
+      required this.id,
+      required this.originalTitle,
+      required this.overview,
+      required this.popularity,
+      required this.posterPath,
+      required this.releaseDate,
+      required this.title,
+      required this.video,
+      required this.voteAverage,
+      required this.voteCount,
+      this.genre});
 
   Movie.watchlist({
     required this.id,
@@ -59,6 +60,7 @@ class Movie extends Equatable {
   bool? adult;
   String? backdropPath;
   List<int>? genreIds;
+  List<Genre>? genre;
   int id;
   String? originalTitle;
   String? overview;

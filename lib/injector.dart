@@ -9,6 +9,7 @@ import 'package:dicoding_tv_series/domain/usecase/get_popular_movie.dart';
 import 'package:dicoding_tv_series/domain/usecase/get_recomendation_movie.dart';
 import 'package:dicoding_tv_series/domain/usecase/get_top_rated_movie.dart';
 import 'package:dicoding_tv_series/domain/usecase/search_movie.dart';
+import 'package:dicoding_tv_series/domain/usecase/tv_series.dart';
 import 'package:dicoding_tv_series/domain/usecase/watchlist_movie.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_cast_bloc/movie_cast_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_detail_bloc/movie_detail_bloc.dart';
@@ -18,6 +19,11 @@ import 'package:dicoding_tv_series/presentation/bloc/movie_recomendation_bloc/mo
 import 'package:dicoding_tv_series/presentation/bloc/movie_search_bloc/movie_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_detail_bloc/tv_detail_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_now_playing_bloc/tv_now_playing_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_recomendation_bloc/tv_recomendation_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
@@ -35,6 +41,12 @@ void init() {
   sl.registerFactory(() => MovieWathclistBloc(sl()));
   sl.registerFactory(() => MovieNowPlayingBloc(sl()));
   sl.registerFactory(() => MovieRecomendationBloc(sl()));
+  sl.registerFactory(() => TvTopRatedBloc(sl()));
+  sl.registerFactory(() => TvPopularBloc(sl()));
+  sl.registerFactory(() => TvDetailBloc(sl()));
+
+  sl.registerFactory(() => TvNowPlayingBloc(sl()));
+  sl.registerFactory(() => TvRecomendationBloc(sl()));
 
   sl.registerLazySingleton(() => GetPopularMovie(sl()));
   sl.registerLazySingleton(() => GetTopRatedMovie(sl()));
@@ -44,6 +56,7 @@ void init() {
   sl.registerLazySingleton(() => WatchListsMovie(sl()));
   sl.registerLazySingleton(() => GetRecomendation(sl()));
   sl.registerLazySingleton(() => GetNowPlaying(sl()));
+  sl.registerLazySingleton(() => TvSeries(sl()));
 
   sl.registerLazySingleton<MovieRepository>(() => MovieModelRepository(sl(), sl()));
   sl.registerLazySingleton(() => http.Client());

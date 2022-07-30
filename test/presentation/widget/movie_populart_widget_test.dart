@@ -1,11 +1,6 @@
-import 'dart:math';
-
-import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dicoding_tv_series/common/failure.dart';
 import 'package:dicoding_tv_series/domain/usecase/get_popular_movie.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_popular_bloc/movie_popular_bloc_bloc.dart';
-import 'package:dicoding_tv_series/presentation/pages/movie_list.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_popular_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

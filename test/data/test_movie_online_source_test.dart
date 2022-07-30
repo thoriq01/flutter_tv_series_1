@@ -129,6 +129,13 @@ void main() {
       // assert
       expect(result, tSearchResult);
     });
+    test('should throw ServerException when response code is other than 200', () async {
+      // arrange
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/now_playing?$API_KEY'))).thenAnswer((_) async => http.Response("Not Found", 400)); // act
+      final result = dataSource.getNowPlayingMovies();
+      // assert
+      expect(() => result, throwsA(isA<ServerException>()));
+    });
   });
 
   // get movie cast
@@ -166,14 +173,14 @@ void main() {
       // assert
       expect(result, tCastList);
     });
-    // test('should throw ServerException when response code is other than 200', () async {
-    //   // arrange
-    //   when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/recommendations?$API_KEY')))
-    //       .thenAnswer((_) async => http.Response("Not Foynd", 400)); // act
-    //   final call = dataSource.getRecomendationsMovies(tId);
-    //   // assert
-    //   expect(() => call, throwsA(isA<ServerException>()));
-    // });
+    test('should throw ServerException when response code is other than 200', () async {
+      // arrange
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/recommendations?$API_KEY')))
+          .thenAnswer((_) async => http.Response("Not Foynd", 400)); // act
+      final call = dataSource.getRecomendationsMovies(tId);
+      // assert
+      expect(() => call, throwsA(isA<ServerException>()));
+    });
   });
 
   group("Tv Now Playing", () {
@@ -188,14 +195,14 @@ void main() {
       // assert
       expect(result, tSearchResult);
     });
-    // test('should return error of movies when response code more than 200', () async {
-    //   // arrange
-    //   when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/on_the_air?$API_KEY"))).thenThrow((_) async => http.Response("Error", 404));
-    //   // act
-    //   final result = await dataSource.getNowPlayingTv();
-    //   // assert
-    //   expect(result, throwsA(isA<ServerException>()));
-    // });
+    test('should return error of movies when response code more than 200', () async {
+      // arrange
+      when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/on_the_air?$API_KEY"))).thenAnswer((_) async => http.Response("Error", 404));
+      // act
+      final result = dataSource.getNowPlayingTv();
+      // assert
+      expect(result, throwsA(isA<ServerException>()));
+    });
   });
   group("Tv Popular", () {
     final tSearchResult = TvResponse.fromJson(json.decode(readJson('dummy_data/tv_popular.json'))).tvList;
@@ -209,14 +216,14 @@ void main() {
       // assert
       expect(result, tSearchResult);
     });
-    // test('should return error of movies when response code more than 200', () async {
-    //   // arrange
-    //   when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/popular?$API_KEY"))).thenThrow((_) async => http.Response("Error", 404));
-    //   // act
-    //   final result = await dataSource.getPopularTv();
-    //   // assert
-    //   expect(result, throwsA(isA<ServerException>()));
-    // });
+    test('should return error of movies when response code more than 200', () async {
+      // arrange
+      when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/popular?$API_KEY"))).thenAnswer((_) async => http.Response("Error", 404));
+      // act
+      final result = dataSource.getPopularTv();
+      // assert
+      expect(result, throwsA(isA<ServerException>()));
+    });
   });
   group("Tv Top Rated", () {
     test('should return list of movies when response code is 200', () async {
@@ -233,9 +240,51 @@ void main() {
   });
   test('should return error of movies when response code more than 200', () async {
     // arrange
-    when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/top_rated?$API_KEY"))).thenThrow((_) async => http.Response("Error", 404));
+    when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/top_rated?$API_KEY"))).thenAnswer((_) async => http.Response("Error", 404));
     // act
-    final result = await dataSource.getTopRatedTv();
+    final result = dataSource.getTopRatedTv();
+    // assert
+    expect(result, throwsA(isA<ServerException>()));
+  });
+  group("Tv Recomendation", () {
+    test('should return list of movies when response code is 200', () async {
+      final tSearchResult = TvResponse.fromJson(json.decode(readJson('dummy_data/tv_recomendation.json'))).tvList;
+
+      // arrange
+      when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/tv/66732/recommendations?$API_KEY")))
+          .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_recomendation.json'), 200));
+      // act
+      final result = await dataSource.getRecomendationTv(66732);
+      // assert
+      expect(result, tSearchResult);
+    });
+  });
+  test('should return error of movies when response code more than 200', () async {
+    // arrange
+    when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/66732/recommendations?$API_KEY"))).thenAnswer((_) async => http.Response("Not Found", 400));
+    // act
+    final result = dataSource.getRecomendationTv(66732);
+    // assert
+    expect(result, throwsA(isA<ServerException>()));
+  });
+  group("Tv Detail", () {
+    // test('should return list of movies when response code is 200', () async {
+    //   final tSearchResult = TvResponse.fromJson(json.decode(readJson('dummy_data/tv_detail.json'))).tvList;
+
+    //   // arrange
+    //   when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/tv/66732?$API_KEY")))
+    //       .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_detail.json'), 200));
+    //   // act
+    //   final result = await dataSource.getDetailTv(66732);
+    //   // assert
+    //   expect(result, tSearchResult);
+    // });
+  });
+  test('should return error of movies when response code more than 200', () async {
+    // arrange
+    when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/66732?$API_KEY"))).thenAnswer((_) async => http.Response("Error", 404));
+    // act
+    final result = dataSource.getDetailTv(66732);
     // assert
     expect(result, throwsA(isA<ServerException>()));
   });

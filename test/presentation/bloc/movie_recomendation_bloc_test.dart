@@ -10,8 +10,6 @@ import 'package:mockito/mockito.dart';
 import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/test_helper.mocks.dart';
 
-class _GetRecomendation extends Mock implements GetRecomendation {}
-
 void main() {
   late GetRecomendation _getRecomendation;
   late MockMovieRepository _movieRepository;

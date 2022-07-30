@@ -21,6 +21,7 @@ class MovieNowPlayingWidget extends StatelessWidget {
         } else if (state is MovieNowPlayingLoaded) {
           if (state.movies.length > 0) {
             return MovieListCard(
+              tipe: "movie",
               length: 2,
               isWatchlist: false,
               height: 500,

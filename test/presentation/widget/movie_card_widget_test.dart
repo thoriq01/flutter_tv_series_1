@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:dicoding_tv_series/presentation/widget/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:http/http.dart' as http;
 
 import '../../helpers/test_helper.mocks.dart';
 

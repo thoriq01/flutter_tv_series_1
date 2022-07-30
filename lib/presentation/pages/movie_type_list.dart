@@ -44,6 +44,7 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
               return BlocBuilder<MovieTopRatedBloc, MovieTopRatedState>(builder: (context, state) {
                 if (state is MovieTopRatedLoaded) {
                   return MovieListCard(
+                    tipe: "movie",
                     length: state.movies.length,
                     isWatchlist: false,
                     height: double.infinity,
@@ -65,6 +66,7 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
               return BlocBuilder<MoviePopularBlocBloc, MoviePopularBlocState>(builder: (context, state) {
                 if (state is MoviePopularLoaded) {
                   return MovieListCard(
+                    tipe: "movie",
                     length: state.movies.length,
                     height: MediaQuery.of(context).size.width * 100,
                     isWatchlist: false,
@@ -95,6 +97,7 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
                     if (state.movies.length > 0) {
                       return Container(
                         child: MovieListCard(
+                          tipe: "movie",
                           length: state.movies.length,
                           isWatchlist: false,
                           isScrollable: true,
@@ -124,6 +127,7 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
                     if (state.movies.length > 0) {
                       return Container(
                         child: MovieListCard(
+                          tipe: "movie",
                           length: state.movies.length,
                           isWatchlist: false,
                           height: MediaQuery.of(context).size.height,

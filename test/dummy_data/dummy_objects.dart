@@ -62,7 +62,7 @@ final testMovieMap = {
 final testTvSeries = Tv(
     backdropPath: "/7q448EVOnuE3gVAx24krzO7SNXM.jpg",
     firstAirDate: "2021-09-03",
-    genreIds: [10764],
+    genres: [10764],
     id: 130392,
     name: "The D Amelio Show",
     originCountry: ["US"],
