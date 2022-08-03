@@ -13,7 +13,7 @@ class WatchListsMovie {
     return _repository.getWatchlistMovies();
   }
 
-  Future<Either<Failure, String>> saveWatchlist(MovieDetail movie) {
+  Future<Either<Failure, String>> saveWatchlist(MovieDetail movie, {int tipe = 0}) {
     return _repository.saveWatchlist(movie);
   }
 

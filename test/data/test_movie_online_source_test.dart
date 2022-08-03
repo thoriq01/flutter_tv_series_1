@@ -288,4 +288,24 @@ void main() {
     // assert
     expect(result, throwsA(isA<ServerException>()));
   });
+  // test('should return tv when search', () async {
+  //   final tSearchResult = TvResponse.fromJson(json.decode(readJson('dummy_data/tv_search.json'))).tvList;
+
+  //   // arrange
+  //   when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/search/tv?$API_KEY&query=bold")))
+  //       .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_search.json'), 200));
+  //   // act
+  //   final result = await dataSource.searchTv("bold");
+  //   // assert
+  //   expect(result, tSearchResult);
+  // });
+  test('should return tv when search', () async {
+    // arrange
+    when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/search/tv?$API_KEY&query=bold")))
+        .thenAnswer((_) async => http.Response("Not Founds", 400));
+    // act
+    final result = dataSource.searchTv("bold");
+    // assert
+    expect(result, throwsA(isA<ServerException>()));
+  });
 }

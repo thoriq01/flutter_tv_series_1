@@ -183,4 +183,16 @@ class MovieModelRepository implements MovieRepository {
       return Left(ConnectionFailure('Failed to connect to the network'));
     }
   }
+
+  @override
+  Future<Either<Failure, List<Tv>>> searchTv(String query) async {
+    final response = await remoteDataSource.searchTv(query);
+    try {
+      return Right(response.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return Left(ServerFailure(''));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
 }

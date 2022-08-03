@@ -9,6 +9,7 @@ class Movie extends Equatable {
       required this.genreIds,
       required this.id,
       required this.originalTitle,
+      this.tipe,
       required this.overview,
       required this.popularity,
       required this.posterPath,
@@ -19,17 +20,13 @@ class Movie extends Equatable {
       required this.voteCount,
       this.genre});
 
-  Movie.watchlist({
-    required this.id,
-    required this.overview,
-    required this.posterPath,
-    required this.title,
-  });
+  Movie.watchlist({required this.id, required this.overview, required this.posterPath, required this.title, this.tipe});
   factory Movie.fromEntity(MovieDetail movie) => Movie(
         adult: movie.adult,
         backdropPath: movie.backdropPath,
         genreIds: [],
-        id: movie.id,
+        tipe: movie.tipe,
+        id: movie.id!,
         originalTitle: movie.originalTitle,
         overview: movie.overview,
         posterPath: movie.posterPath,
@@ -71,6 +68,7 @@ class Movie extends Equatable {
   bool? video;
   double? voteAverage;
   int? voteCount;
+  final int? tipe;
 
   @override
   List<Object?> get props => [

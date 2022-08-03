@@ -11,9 +11,11 @@ import 'package:dicoding_tv_series/presentation/bloc/tv_detail_bloc/tv_detail_bl
 import 'package:dicoding_tv_series/presentation/bloc/tv_now_playing_bloc/tv_now_playing_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_recomendation_bloc/tv_recomendation_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_search_bloc/tv_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 import 'injector.dart' as dl;
 
 void main() {
@@ -66,18 +68,23 @@ class MyApp extends StatelessWidget {
         BlocProvider<TvDetailBloc>(
           create: (context) => dl.sl<TvDetailBloc>(),
         ),
+        BlocProvider<TvSearchBloc>(
+          create: (context) => dl.sl<TvSearchBloc>(),
+        ),
       ],
-      child: MaterialApp(
-        title: 'TV SERIES',
-        onGenerateRoute: MovieRouter.movieRouterPage,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          scaffoldBackgroundColor: Color.fromRGBO(29, 39, 39, 0),
-          appBarTheme: AppBarTheme(
-            color: Color.fromRGBO(29, 39, 39, 0),
-            elevation: 0,
+      child: Sizer(
+        builder: (context, orientation, deviceType) => MaterialApp(
+          title: 'TV SERIES',
+          onGenerateRoute: MovieRouter.movieRouterPage,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            scaffoldBackgroundColor: Color.fromRGBO(29, 39, 39, 0),
+            appBarTheme: AppBarTheme(
+              color: Color.fromRGBO(29, 39, 39, 0),
+              elevation: 0,
+            ),
           ),
         ),
       ),

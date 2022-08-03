@@ -22,4 +22,5 @@ abstract class MovieRepository {
   Future<Either<Failure, List<Tv>>> getNowPlayingTv();
   Future<Either<Failure, Tv>> getTvDetail(int id);
   Future<Either<Failure, List<Tv>>> getTvRecomendation(int id);
+  Future<Either<Failure, List<Tv>>> searchTv(String query);
 }

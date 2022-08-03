@@ -8,6 +8,7 @@ import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_now_playing_bloc/tv_now_playing_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_bloc.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_search_bloc/tv_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_card.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_now_playing_widget.dart';
@@ -38,6 +39,7 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
     context.read<MoviePopularBlocBloc>().add(LoadPopularMovie());
     context.read<MovieTopRatedBloc>().add(LoadMovieTopRated());
     context.read<MovieSearchBloc>().add(RemoveSearchMovieEvent());
+    context.read<TvSearchBloc>().add(RemoveSearchTvEvent());
     context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
     context.read<MovieNowPlayingBloc>().add(LoadMovieNowPlaying());
     context.read<TvPopularBloc>().add(LoadTvPopular());
@@ -45,7 +47,7 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
     context.read<TvNowPlayingBloc>().add(LoadTvNowPlaying());
 
     controller = TabController(length: 2, vsync: this);
-    controller!.index = 1;
+    controller!.index = 0;
   }
 
   @override
@@ -63,8 +65,8 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
             child: TabBarView(
               controller: controller,
               children: [
-                MoviePage(tipe: "movie", searchMovie: _searchMovie),
-                MoviePage(tipe: "tv", searchMovie: _searchMovie),
+                MovieAndTvPage(tipe: "movie", searchMovie: _searchMovie),
+                MovieAndTvPage(tipe: "tv", searchMovie: _searchMovie),
               ],
             ),
           ),
@@ -73,6 +75,7 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
       bottomNavigationBar: Container(
         height: 60,
         child: TabBar(
+          onTap: (value) => setState(() {}),
           unselectedLabelColor: Colors.grey.shade300,
           padding: EdgeInsets.zero,
           indicatorSize: TabBarIndicatorSize.label,
@@ -93,9 +96,9 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
   }
 }
 
-class MoviePage extends StatelessWidget {
+class MovieAndTvPage extends StatelessWidget {
   final String? tipe;
-  const MoviePage({
+  const MovieAndTvPage({
     Key? key,
     required TextEditingController searchMovie,
     this.tipe,
@@ -133,119 +136,12 @@ class MoviePage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10),
-          SearchWidget(searchMovie: _searchMovie),
+          SearchWidget(
+            searchMovie: _searchMovie,
+            tipe: tipe,
+          ),
           SizedBox(height: 20),
-          BlocBuilder<MovieSearchBloc, MovieSearchBlocState>(builder: (context, state) {
-            if (state is MovieSearchBlocLoaded) {
-              return Container(
-                height: 500,
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: (state.movies.length),
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    if (state.movies.length == 0) {
-                      return Center(
-                        child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
-                      );
-                    }
-                    return ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie(), tipe!));
-                      },
-                      leading: Container(
-                        child: Image(
-                          image: NetworkImage("https://image.tmdb.org/t/p/w500/${state.movies[index].posterPath!}"),
-                          fit: BoxFit.cover,
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                      title: Text(
-                        state.movies[index].title!,
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 18,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            } else if (state is MovieSearchBlocError) {
-              return Center(
-                child: Text(state.message),
-              );
-            } else if (state is MovieSearchBlocLoading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is MovieSearchBlocEmpty) {
-              return Builder(builder: (context) {
-                if (tipe == "movie") {
-                  return Column(
-                    children: [
-                      MovieWatchlistWidget(
-                        tipe: "movie",
-                      ),
-                      TitleContent(
-                        text: "Now Playing",
-                        onPressed: () {
-                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("nowplaying"));
-                        },
-                      ),
-                      MovieNowPlayingWidget(),
-                      TitleContent(
-                        text: "Popular",
-                        onPressed: () {
-                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("popular"));
-                        },
-                      ),
-                      MoviePopularBlocWidget(),
-                      TitleContent(
-                          text: "Top Movie",
-                          onPressed: () {
-                            Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("topmovie"));
-                          }),
-                      MovieTopRatedWidget(),
-                    ],
-                  );
-                } else {
-                  return Column(
-                    children: [
-                      MovieWatchlistWidget(
-                        tipe: "tv",
-                      ),
-                      TitleContent(
-                        text: "Tv Now Playing",
-                        onPressed: () {
-                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("nowplaying"));
-                        },
-                      ),
-                      TvNowPlayingWidget(),
-                      TitleContent(
-                        text: "Tv Now Popular",
-                        onPressed: () {
-                          Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("popular"));
-                        },
-                      ),
-                      TvPopularWidget(),
-                      TitleContent(
-                          text: "Top Popular",
-                          onPressed: () {
-                            Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("topmovie"));
-                          }),
-                      TvTopRatedWidget(),
-                    ],
-                  );
-                }
-              });
-            } else {
-              return Center(
-                child: Container(),
-              );
-            }
-          }),
+          tipe == "tv" ? TvWidget(tipe: "tv") : MovieWidget(tipe: "movie"),
           SizedBox(height: 20),
         ],
       ),
@@ -253,10 +149,202 @@ class MoviePage extends StatelessWidget {
   }
 }
 
+class MovieWidget extends StatelessWidget {
+  const MovieWidget({
+    Key? key,
+    required this.tipe,
+  }) : super(key: key);
+
+  final String? tipe;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MovieSearchBloc, MovieSearchBlocState>(builder: (context, state) {
+      if (state is MovieSearchBlocLoaded) {
+        return Container(
+          height: 500,
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: (state.movies.length),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              if (state.movies.length == 0) {
+                return Center(
+                  child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
+                );
+              }
+              return ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie(), tipe!));
+                },
+                leading: Container(
+                  child: Image(
+                    image: NetworkImage("https://image.tmdb.org/t/p/w500/${state.movies[index].posterPath!}"),
+                    fit: BoxFit.cover,
+                    width: 100,
+                    height: 100,
+                  ),
+                ),
+                title: Text(
+                  state.movies[index].title!,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 18,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      } else if (state is MovieSearchBlocError) {
+        return Center(
+          child: Text(state.message),
+        );
+      } else if (state is MovieSearchBlocLoading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is MovieSearchBlocEmpty) {
+        return Builder(builder: (context) {
+          return Column(
+            children: [
+              MovieWatchlistWidget(
+                tipe: "movie",
+              ),
+              TitleContent(
+                text: "Now Playing",
+                onPressed: () {
+                  Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("nowplaying"));
+                },
+              ),
+              MovieNowPlayingWidget(),
+              TitleContent(
+                text: "Popular",
+                onPressed: () {
+                  Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("popular"));
+                },
+              ),
+              MoviePopularBlocWidget(),
+              TitleContent(
+                  text: "Top Movie",
+                  onPressed: () {
+                    Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("topmovie"));
+                  }),
+              MovieTopRatedWidget(),
+            ],
+          );
+        });
+      } else {
+        return Center(
+          child: Container(),
+        );
+      }
+    });
+  }
+}
+
+class TvWidget extends StatelessWidget {
+  const TvWidget({
+    Key? key,
+    required this.tipe,
+  }) : super(key: key);
+
+  final String? tipe;
+
+  @override
+  Widget build(BuildContext context) {
+    var movies = <Movie>[];
+    return BlocBuilder<TvSearchBloc, TvSearchState>(builder: (context, state) {
+      if (state is TvSearchLoaded) {
+        state.tvList.forEach((element) {
+          movies.add(element.tvToMovie());
+        });
+        return Container(
+          height: 500,
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: (movies.length),
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              if (movies.length == 0) {
+                return Center(
+                  child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
+                );
+              }
+              return ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, movieDetailPage, arguments: DetailTvArgument(movies[index].movie(), tipe!));
+                },
+                leading: Container(
+                  child: Image(
+                    image: NetworkImage("https://image.tmdb.org/t/p/w500/${movies[index].posterPath!}"),
+                    fit: BoxFit.cover,
+                    width: 100,
+                    height: 100,
+                  ),
+                ),
+                title: Text(
+                  movies[index].title!,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 18,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      } else if (state is TvSearchError) {
+        return Center(
+          child: Text(state.message),
+        );
+      } else if (state is TvSearchLoading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is TvSearchEmpty) {
+        return Column(
+          children: [
+            MovieWatchlistWidget(
+              tipe: "tv",
+            ),
+            TitleContent(
+              text: "Tv Now Playing",
+              onPressed: () {
+                Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvnowplaying"));
+              },
+            ),
+            TvNowPlayingWidget(),
+            TitleContent(
+              text: "Tv Popular",
+              onPressed: () {
+                Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvpopular"));
+              },
+            ),
+            TvPopularWidget(),
+            TitleContent(
+                text: "Top Top Rated",
+                onPressed: () {
+                  Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvtoprated"));
+                }),
+            TvTopRatedWidget(),
+          ],
+        );
+      } else {
+        return Center(
+          child: Container(),
+        );
+      }
+    });
+  }
+}
+
 class SearchWidget extends StatelessWidget {
+  final String? tipe;
   const SearchWidget({
     Key? key,
     required TextEditingController searchMovie,
+    this.tipe,
   })  : _searchMovie = searchMovie,
         super(key: key);
 
@@ -271,7 +359,7 @@ class SearchWidget extends StatelessWidget {
       ),
       controller: _searchMovie,
       decoration: InputDecoration(
-        hintText: "Name of Movie , Actors",
+        hintText: tipe == "tv" ? "Tv Name" : "Name of Movie , Actors",
         hintStyle: TextStyle(
           color: Colors.white54,
           fontSize: 18,
@@ -287,10 +375,18 @@ class SearchWidget extends StatelessWidget {
         ),
       ),
       onChanged: (value) {
-        if (value.length > 1) {
-          context.read<MovieSearchBloc>().add(SearchMovieEvent(value));
+        if (tipe == "tv") {
+          if (value.length > 1) {
+            context.read<TvSearchBloc>().add(SearchTvEvent(value));
+          } else {
+            context.read<TvSearchBloc>().add(RemoveSearchTvEvent());
+          }
         } else {
-          context.read<MovieSearchBloc>().add(RemoveSearchMovieEvent());
+          if (value.length > 1) {
+            context.read<MovieSearchBloc>().add(SearchMovieEvent(value));
+          } else {
+            context.read<MovieSearchBloc>().add(RemoveSearchMovieEvent());
+          }
         }
       },
     );
@@ -318,6 +414,13 @@ class MovieListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var data = <Movie>[];
+    if (tipe == "tv") {
+      movies.where((element) => element.tipe == 1).toList();
+    } else {
+      movies.where((element) => element.tipe == 2).toList();
+    }
+
     return Container(
       height: height,
       child: ListView.builder(

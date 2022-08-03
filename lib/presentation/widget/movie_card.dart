@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class MovieCard extends StatelessWidget {
   final String? title;
@@ -7,12 +8,14 @@ class MovieCard extends StatelessWidget {
   final String? overview;
   final String? date;
   final bool? isWatchlist;
+  final int? tipe;
   const MovieCard({
     Key? key,
     this.title,
     this.posterPath,
     this.overview,
     this.date,
+    this.tipe,
     this.isWatchlist,
   }) : super(key: key);
 
@@ -22,11 +25,11 @@ class MovieCard extends StatelessWidget {
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(bottom: 10),
       // ignore: unrelated_type_equality_checks
-      child: isWatchlist == true ? _vertical() : _horizontal(),
+      child: isWatchlist == true ? _vertical(context) : _horizontal(context),
     );
   }
 
-  Row _horizontal() {
+  Row _horizontal(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +40,7 @@ class MovieCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: CachedNetworkImage(
               imageUrl: 'https://image.tmdb.org/t/p/w500${this.posterPath}',
-              width: 160,
+              width: tipe == 1 ? 160 : MediaQuery.of(context).size.width * 0.3,
             ),
           ),
         ),
@@ -71,7 +74,7 @@ class MovieCard extends StatelessWidget {
     );
   }
 
-  Column _vertical() {
+  Column _vertical(BuildContext context) {
     return Column(
       children: [
         Align(
@@ -80,7 +83,7 @@ class MovieCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: Image.network(
               'https://image.tmdb.org/t/p/w500${this.posterPath}',
-              width: 160,
+              width: MediaQuery.of(context).size.width * 0.35,
             ),
           ),
         ),

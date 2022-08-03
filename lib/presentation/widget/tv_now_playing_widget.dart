@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TvNowPlayingWidget extends StatelessWidget {
+  final String? idPage;
   const TvNowPlayingWidget({
     Key? key,
+    this.idPage,
   }) : super(key: key);
 
   @override
@@ -19,8 +21,8 @@ class TvNowPlayingWidget extends StatelessWidget {
         });
         return MovieListCard(
           tipe: "tv",
-          length: 2,
-          height: 500,
+          length: idPage == null ? 2 : state.tvList.length,
+          height: idPage == null ? 500 : double.infinity,
           isWatchlist: false,
           movies: movie,
           direction: Axis.vertical,

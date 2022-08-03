@@ -27,4 +27,8 @@ class TvSeries {
   Future<Either<Failure, List<Tv>>> getTvRecomendation(int id) {
     return repository.getTvRecomendation(id);
   }
+
+  Future<Either<Failure, List<Tv>>> searchTv(String query) {
+    return repository.searchTv(query);
+  }
 }

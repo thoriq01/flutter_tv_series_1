@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dicoding_tv_series/config/router/movie_route_name.dart';
 import 'package:dicoding_tv_series/config/router/movie_router.dart';
 import 'package:dicoding_tv_series/domain/entities/movie.dart';
@@ -21,13 +22,23 @@ class _TvDetailPageState extends State<TvDetailPage> {
   @override
   void initState() {
     super.initState();
-    context.read<TvDetailBloc>().add(LoadTvDetailEvent(this.widget.movie!.id));
-    context.read<MovieWathclistBloc>().add(CheckIsAddedMovieWatchlist(this.widget.movie!.id));
-    context.read<TvRecomendationBloc>().add(LoadTvRecomendationEvent(this.widget.movie!.id));
+    context.read<TvDetailBloc>().add(LoadTvDetailEvent(this.widget.movie!.id!));
+    context.read<MovieWathclistBloc>().add(CheckIsAddedMovieWatchlist(this.widget.movie!.id!));
+    context.read<TvRecomendationBloc>().add(LoadTvRecomendationEvent(this.widget.movie!.id!));
   }
+
+  var movieData = <Movie>[];
 
   @override
   Widget build(BuildContext context) {
+    var detail = MovieDetail(
+      adult: this.widget.movie!.adult,
+      overview: this.widget.movie!.overview,
+      id: this.widget.movie!.id,
+      posterPath: this.widget.movie!.posterPath,
+      title: this.widget.movie!.title,
+      tipe: 2,
+    );
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -164,9 +175,8 @@ class _TvDetailPageState extends State<TvDetailPage> {
                       if (state is TvRecomendationLoading) {
                         return MovieLoadingData();
                       } else if (state is TvRecomendationLoaded) {
-                        var movie = <Movie>[];
                         state.tvRecomendation.forEach((e) {
-                          movie.add(e.tvToMovie());
+                          movieData.add(e.tvToMovie());
                         });
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -179,7 +189,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                             SizedBox(height: 15),
                             Container(
                               height: 200,
-                              child: Recomendationwidget(movie: movie, tipe: widget.tipe!),
+                              child: Recomendationwidget(movie: movieData, tipe: "tipe"),
                             ),
                           ],
                         );
@@ -252,7 +262,17 @@ class TvWatchList extends StatelessWidget {
               style: TextStyle(color: Colors.black),
             ),
             onPressed: () {
-              context.read<MovieWathclistBloc>().add(AddMovieWatchlist(movie));
+              context.read<MovieWathclistBloc>().add(
+                    AddMovieWatchlist(
+                      MovieDetail(
+                        id: movie.id,
+                        title: movie.title,
+                        overview: movie.overview,
+                        posterPath: movie.posterPath,
+                        tipe: 2,
+                      ),
+                    ),
+                  );
             },
           );
         }
@@ -286,8 +306,8 @@ class Recomendationwidget extends StatelessWidget {
                 height: 100,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    'https://image.tmdb.org/t/p/w500${movie[index].posterPath}',
+                  child: CachedNetworkImage(
+                    imageUrl: 'https://image.tmdb.org/t/p/w500${movie[index].backdropPath}',
                     fit: BoxFit.cover,
                   ),
                 ),

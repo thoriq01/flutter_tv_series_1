@@ -1,7 +1,5 @@
 import 'package:dicoding_tv_series/domain/entities/movie.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_now_playing_bloc/movie_now_playing_bloc.dart';
-import 'package:dicoding_tv_series/presentation/bloc/movie_popular_bloc/movie_popular_bloc_bloc.dart';
-import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_now_playing_bloc/tv_now_playing_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_bloc.dart';
@@ -24,9 +22,9 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
   @override
   void initState() {
     super.initState();
-    if (this.widget.category == "popular") {
+    if (this.widget.category == "tvpopular") {
       context.read<TvPopularBloc>().add(LoadTvPopular());
-    } else if (this.widget.category == "topmovie") {
+    } else if (this.widget.category == "tvtoprated") {
       context.read<TvTopRatedBloc>().add(LoadTvTopRated());
     } else if (this.widget.category == "watchlist") {
       context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
@@ -46,14 +44,14 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
         child: Container(
           padding: EdgeInsets.all(8),
           child: Builder(builder: (context) {
-            if (this.widget.category == "topmovie") {
+            if (this.widget.category == "toprated") {
               return BlocBuilder<TvTopRatedBloc, TvTopRatedState>(builder: (context, state) {
                 if (state is TvTopRatedLoaded) {
                   state.tvList.forEach((tv) {
                     movie.add(tv.tvToMovie());
                   });
                   return MovieListCard(
-                    tipe: "movie",
+                    tipe: "tv",
                     length: state.tvList.length,
                     isWatchlist: false,
                     height: double.infinity,
@@ -71,14 +69,14 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
                   );
                 }
               });
-            } else if (this.widget.category == "popular") {
+            } else if (this.widget.category == "tvpopular") {
               return BlocBuilder<TvPopularBloc, TvPopularState>(builder: (context, state) {
                 if (state is TvPopularLoaded) {
                   state.tvList.forEach((tv) {
                     movie.add(tv.tvToMovie());
                   });
                   return MovieListCard(
-                    tipe: "movie",
+                    tipe: "tv",
                     length: state.tvList.length,
                     height: MediaQuery.of(context).size.width * 100,
                     isWatchlist: false,
@@ -109,7 +107,7 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
                     if (state.movies.length > 0) {
                       return Container(
                         child: MovieListCard(
-                          tipe: "movie",
+                          tipe: "tv",
                           length: state.movies.length,
                           isWatchlist: false,
                           isScrollable: true,
@@ -142,7 +140,7 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
                       });
                       return Container(
                         child: MovieListCard(
-                          tipe: "movie",
+                          tipe: "tv",
                           length: state.tvList.length,
                           isWatchlist: false,
                           height: MediaQuery.of(context).size.height,
@@ -167,12 +165,12 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
   }
 
   _appBarTitle() {
-    if (this.widget.category == "topmovie") {
+    if (this.widget.category == "tvtoprated") {
       return Text(
         "Tv Top Rated",
         style: TextStyle(fontSize: 20, color: Colors.white),
       );
-    } else if (this.widget.category == "popular") {
+    } else if (this.widget.category == "tvpopular") {
       return Text(
         "Tv Popular",
         style: TextStyle(fontSize: 20, color: Colors.white),

@@ -1,5 +1,6 @@
 import 'package:dicoding_tv_series/config/router/movie_route_name.dart';
 import 'package:dicoding_tv_series/config/router/movie_router.dart';
+import 'package:dicoding_tv_series/domain/entities/movie.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
 import 'package:dicoding_tv_series/presentation/pages/movie_list.dart';
 import 'package:dicoding_tv_series/presentation/widget/title_content.dart';
@@ -24,6 +25,20 @@ class MovieWatchlistWidget extends StatelessWidget {
             child: Text(state.message),
           );
         } else if (state is MovieWatchlistLoaded) {
+          var loaded = <Movie>[];
+          if (tipe == "movie") {
+            state.movies.forEach((element) {
+              if (element.tipe == 1) {
+                loaded.add(element);
+              }
+            });
+          } else {
+            state.movies.forEach((element) {
+              if (element.tipe == 2) {
+                loaded.add(element);
+              }
+            });
+          }
           if (state.movies.length > 0) {
             return Container(
               child: Column(
@@ -36,11 +51,11 @@ class MovieWatchlistWidget extends StatelessWidget {
                   ),
                   MovieListCard(
                     tipe: tipe,
-                    length: state.movies.length,
+                    length: loaded.length,
                     isWatchlist: true,
                     isScrollable: true,
                     height: 300,
-                    movies: state.movies,
+                    movies: loaded,
                     direction: Axis.horizontal,
                   ),
                 ],

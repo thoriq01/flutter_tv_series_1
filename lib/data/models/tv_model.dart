@@ -1,4 +1,3 @@
-import 'package:dicoding_tv_series/domain/entities/genre.dart';
 import 'package:dicoding_tv_series/domain/entities/tv.dart';
 import 'package:equatable/equatable.dart';
 

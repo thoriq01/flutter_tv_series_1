@@ -23,6 +23,7 @@ abstract class MovideDataRepository {
   Future<List<TvModel>> getTopRatedTv();
   Future<TvModel> getDetailTv(int id);
   Future<List<TvModel>> getRecomendationTv(int id);
+  Future<List<TvModel>> searchTv(String query);
 }
 
 class MovieDataSource implements MovideDataRepository {
@@ -142,6 +143,16 @@ class MovieDataSource implements MovideDataRepository {
   @override
   Future<List<TvModel>> getRecomendationTv(int id) async {
     final response = await client.get(Uri.parse('https://api.themoviedb.org/3/tv/$id/recommendations?$API_KEY'));
+    if (response.statusCode == 200) {
+      return TvResponse.fromJson(json.decode(response.body)).tvList;
+    } else {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<TvModel>> searchTv(String query) async {
+    final response = await client.get(Uri.parse('https://api.themoviedb.org/3/search/tv?$API_KEY&query=$query'));
     if (response.statusCode == 200) {
       return TvResponse.fromJson(json.decode(response.body)).tvList;
     } else {

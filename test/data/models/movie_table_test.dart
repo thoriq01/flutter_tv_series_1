@@ -9,7 +9,7 @@ import '../../dummy_data/dummy_objects.dart';
 import '../../json_reader.dart';
 
 void main() {
-  var data = MovieTable(id: 1, title: "title", posterPath: "posterPath", overview: "overview");
+  var data = MovieTable(id: 1, title: "title", tipe: 1, posterPath: "posterPath", overview: "overview");
   var map = MovieTable.fromMap(testMovieMap);
 
   test("Test Moive Table", () {
@@ -28,6 +28,7 @@ void main() {
       releaseDate: '',
       originalTitle: '',
       runtime: 2,
+      tipe: 1,
       voteAverage: 0,
       voteCount: 1,
     ));

@@ -36,7 +36,8 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY,
         title TEXT,
         overview TEXT,
-        posterPath TEXT
+        posterPath TEXT,
+        tipe INTEGER
       );
     ''');
     print("Database created");

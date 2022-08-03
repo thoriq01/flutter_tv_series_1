@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dicoding_tv_series/domain/usecase/tv_series.dart';
+import 'package:dicoding_tv_series/presentation/bloc/tv_search_bloc/tv_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/widget/tv_top_rated_widget.dart';
 import 'package:flutter/material.dart';
@@ -11,18 +12,27 @@ import '../../helpers/test_helper.mocks.dart';
 
 class MockTopRatedBloc extends MockBloc<TvTopRatedEvent, TvTopRatedState> implements TvTopRatedBloc {}
 
+class MockTvSearchBloc extends MockBloc<TvSearchEvent, TvSearchState> implements TvSearchBloc {}
+
 void main() {
   late TvSeries tvSeries;
   late MockMovieRepository movieRepository;
   late MockTopRatedBloc tvTopRatedBloc;
+  late MockTvSearchBloc tvSearchBloc;
   setUp(() {
     movieRepository = MockMovieRepository();
     tvSeries = TvSeries(movieRepository);
     tvTopRatedBloc = MockTopRatedBloc();
     tvTopRatedBloc.add(LoadTvTopRated());
+    tvSearchBloc = MockTvSearchBloc();
+    tvSearchBloc.add(SearchTvEvent("bold"));
   });
   _makeTestableWidget(Widget body) {
     return (BlocProvider<TvTopRatedBloc>.value(value: TvTopRatedBloc(tvSeries), child: MaterialApp(home: body)));
+  }
+
+  _makeShitWidget(Widget body) {
+    return (BlocProvider<TvSearchBloc>.value(value: TvSearchBloc(tvSeries), child: MaterialApp(home: body)));
   }
 
   _makethiShitPassed() {

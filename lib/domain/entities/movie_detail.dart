@@ -2,33 +2,34 @@ import 'package:dicoding_tv_series/domain/entities/genre.dart';
 import 'package:equatable/equatable.dart';
 
 class MovieDetail extends Equatable {
-  MovieDetail({
-    required this.adult,
-    required this.backdropPath,
-    required this.genres,
-    required this.id,
-    required this.originalTitle,
-    required this.overview,
-    required this.posterPath,
-    required this.releaseDate,
-    required this.runtime,
-    required this.title,
-    required this.voteAverage,
-    required this.voteCount,
-  });
+  MovieDetail(
+      {this.adult,
+      this.backdropPath,
+      this.genres,
+      this.id,
+      this.originalTitle,
+      this.overview,
+      this.posterPath,
+      this.releaseDate,
+      this.runtime,
+      this.title,
+      this.voteAverage,
+      this.voteCount,
+      this.tipe});
 
-  final bool adult;
+  final bool? adult;
   final String? backdropPath;
-  final List<Genre> genres;
-  final int id;
-  final String originalTitle;
-  final String overview;
-  final String posterPath;
-  final String releaseDate;
-  final int runtime;
-  final String title;
-  final double voteAverage;
-  final int voteCount;
+  final List<Genre>? genres;
+  final int? id;
+  final String? originalTitle;
+  final String? overview;
+  final String? posterPath;
+  final String? releaseDate;
+  final int? runtime;
+  final String? title;
+  final double? voteAverage;
+  final int? voteCount;
+  final int? tipe;
 
   @override
   List<Object?> get props => [

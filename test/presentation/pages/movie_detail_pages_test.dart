@@ -77,8 +77,8 @@ void main() {
             BlocProvider<MovieRecomendationBloc>.value(
               value: movieRecomendationBloc,
             ),
-            BlocProvider<MovieWathclistBloc>.value(
-              value: movieWathclistBloc,
+            BlocProvider<MovieWathclistBloc>(
+              create: (_) => movieWathclistBloc,
             ),
           ],
           child: MaterialApp(

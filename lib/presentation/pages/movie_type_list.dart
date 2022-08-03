@@ -3,6 +3,8 @@ import 'package:dicoding_tv_series/presentation/bloc/movie_popular_bloc/movie_po
 import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
 import 'package:dicoding_tv_series/presentation/pages/movie_list.dart';
+import 'package:dicoding_tv_series/presentation/widget/tv_popular_widget.dart';
+import 'package:dicoding_tv_series/presentation/widget/tv_top_rated_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -114,7 +116,7 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
                   }
                 },
               );
-            } else {
+            } else if (this.widget.category == "nowplaying") {
               return BlocBuilder<MovieNowPlayingBloc, MovieNowPlayingState>(
                 builder: (context, state) {
                   if (state is MovienowPlayingLoading) {
@@ -144,6 +146,12 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
                   }
                 },
               );
+            } else if (this.widget.category == "toprated") {
+              return TvTopRatedWidget(idPage: "tvType");
+            } else if (this.widget.category == "tvpopular") {
+              return TvPopularWidget(idPage: "tvType");
+            } else {
+              return TvPopularWidget(idPage: "tvType");
             }
           }),
         ),
@@ -167,9 +175,29 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
         "Watchlist",
         style: TextStyle(fontSize: 20, color: Colors.white),
       );
-    } else {
+    } else if (this.widget.category == "watchlist") {
       return Text(
         "Now Playing",
+        style: TextStyle(fontSize: 20, color: Colors.white),
+      );
+    } else if (this.widget.category == "nowplaying") {
+      return Text(
+        "Now Playing",
+        style: TextStyle(fontSize: 20, color: Colors.white),
+      );
+    } else if (this.widget.category == "toprated") {
+      return Text(
+        "Tv Top Rated",
+        style: TextStyle(fontSize: 20, color: Colors.white),
+      );
+    } else if (this.widget.category == "tvpopular") {
+      return Text(
+        "Tv Popular",
+        style: TextStyle(fontSize: 20, color: Colors.white),
+      );
+    } else if (this.widget.category == "tvnowplaying") {
+      return Text(
+        "Tv Now Playing",
         style: TextStyle(fontSize: 20, color: Colors.white),
       );
     }
