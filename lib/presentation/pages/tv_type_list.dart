@@ -1,3 +1,4 @@
+import 'package:dicoding_tv_series/config/router/movie_route_name.dart';
 import 'package:dicoding_tv_series/domain/entities/movie.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_now_playing_bloc/movie_now_playing_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
@@ -39,12 +40,18 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
       appBar: AppBar(
         elevation: 0,
         title: _appBarTitle(),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(movieListPage);
+              context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
+            },
+            icon: Icon(Icons.arrow_back)),
       ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(8),
           child: Builder(builder: (context) {
-            if (this.widget.category == "toprated") {
+            if (this.widget.category == "tvtoprated") {
               return BlocBuilder<TvTopRatedBloc, TvTopRatedState>(builder: (context, state) {
                 if (state is TvTopRatedLoaded) {
                   state.tvList.forEach((tv) {
@@ -104,15 +111,21 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
                       child: Text(state.message),
                     );
                   } else if (state is MovieWatchlistLoaded) {
-                    if (state.movies.length > 0) {
+                    var dataTv = <Movie>[];
+                    state.movies.forEach((movie) {
+                      if (movie.tipe == 2) {
+                        dataTv.add(movie);
+                      }
+                    });
+                    if (dataTv.length > 0) {
                       return Container(
                         child: MovieListCard(
                           tipe: "tv",
-                          length: state.movies.length,
+                          length: dataTv.length,
                           isWatchlist: false,
                           isScrollable: true,
                           height: MediaQuery.of(context).size.height,
-                          movies: state.movies,
+                          movies: dataTv,
                           direction: Axis.vertical,
                         ),
                       );
@@ -177,7 +190,7 @@ class _TvTypeListPageState extends State<TvTypeListPage> {
       );
     } else if (this.widget.category == "watchlist") {
       return Text(
-        "Watchlist",
+        "Tv Watchlist",
         style: TextStyle(fontSize: 20, color: Colors.white),
       );
     } else {

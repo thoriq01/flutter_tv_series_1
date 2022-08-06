@@ -50,23 +50,23 @@ class MovieCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 200,
+              width: 60.w,
               child: Text(
                 this.title!,
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
                 textAlign: TextAlign.left,
               ),
             ),
             SizedBox(height: 15),
             Container(
-                width: 200,
-                child: Text(this.overview.toString(), maxLines: 3, softWrap: true, style: TextStyle(color: Colors.white70, fontSize: 16))),
+                width: 60.w,
+                child: Text(this.overview.toString(), maxLines: 3, softWrap: true, style: TextStyle(color: Colors.white70, fontSize: 14.sp))),
             SizedBox(height: 15),
             Text(
               "release date",
               style: TextStyle(color: Colors.white),
             ),
-            Text(this.date ?? "", style: TextStyle(color: Colors.white70, fontSize: 16)),
+            Text(this.date ?? "", style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
             SizedBox(height: 5),
           ],
         )

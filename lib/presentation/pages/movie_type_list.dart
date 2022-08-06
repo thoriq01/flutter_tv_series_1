@@ -1,3 +1,4 @@
+import 'package:dicoding_tv_series/domain/entities/movie.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_now_playing_bloc/movie_now_playing_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_popular_bloc/movie_popular_bloc_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_top_rated_bloc.dart';
@@ -37,6 +38,13 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
       appBar: AppBar(
         elevation: 0,
         title: _appBarTitle(),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+            context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       body: SafeArea(
         child: Container(
@@ -96,15 +104,22 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
                       child: Text(state.message),
                     );
                   } else if (state is MovieWatchlistLoaded) {
-                    if (state.movies.length > 0) {
+                    var movies = <Movie>[];
+
+                    state.movies.forEach((e) {
+                      if (e.tipe == 1) {
+                        movies.add(e);
+                      }
+                    });
+                    if (movies.length > 0) {
                       return Container(
                         child: MovieListCard(
                           tipe: "movie",
-                          length: state.movies.length,
+                          length: movies.length,
                           isWatchlist: false,
                           isScrollable: true,
                           height: MediaQuery.of(context).size.height,
-                          movies: state.movies,
+                          movies: movies,
                           direction: Axis.vertical,
                         ),
                       );
@@ -146,12 +161,8 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
                   }
                 },
               );
-            } else if (this.widget.category == "toprated") {
-              return TvTopRatedWidget(idPage: "tvType");
-            } else if (this.widget.category == "tvpopular") {
-              return TvPopularWidget(idPage: "tvType");
             } else {
-              return TvPopularWidget(idPage: "tvType");
+              return Container();
             }
           }),
         ),
@@ -172,7 +183,7 @@ class _MovieTypeListPageState extends State<MovieTypeListPage> {
       );
     } else if (this.widget.category == "watchlist") {
       return Text(
-        "Watchlist",
+        "Movie Watchlist",
         style: TextStyle(fontSize: 20, color: Colors.white),
       );
     } else if (this.widget.category == "watchlist") {

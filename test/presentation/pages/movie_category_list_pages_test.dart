@@ -69,7 +69,7 @@ void main() {
         create: (context) => MovieWathclistBloc(watchListsMovie),
         child: MovieTypeListPage(category: "watchlist"),
       )));
-      expect(find.text("Watchlist"), findsOneWidget);
+      expect(find.text("Movie Watchlist"), findsOneWidget);
     });
   });
 }

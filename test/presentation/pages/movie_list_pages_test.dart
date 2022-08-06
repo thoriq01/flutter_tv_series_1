@@ -22,6 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/test_helper.mocks.dart';
@@ -94,17 +95,21 @@ void main() {
     when(_tvSeries.getPopularTv()).thenAnswer((_) async => Right([testTvSeries]));
     when(_tvSeries.getTopRatedTv()).thenAnswer((_) async => Right([testTvSeries]));
     when(_tvSeries.searchTv("bold")).thenAnswer((realInvocation) async => Right([testTvSeries]));
-    await tester.pumpWidget(MultiBlocProvider(
-      providers: [
-        BlocProvider<TvSearchBloc>.value(value: tvSearchBloc),
-        BlocProvider<TvTopRatedBloc>.value(value: tvTopRatedBloc),
-        BlocProvider<TvPopularBloc>.value(value: tvPopularBloc),
-        BlocProvider<TvNowPlayingBloc>.value(value: tvNowPlayingBloc),
-      ],
-      child: MaterialApp(
-        home: TvWidget(tipe: "tv"),
+    await tester.pumpWidget(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<TvSearchBloc>.value(value: tvSearchBloc),
+          BlocProvider<TvTopRatedBloc>.value(value: tvTopRatedBloc),
+          BlocProvider<TvPopularBloc>.value(value: tvPopularBloc),
+          BlocProvider<TvNowPlayingBloc>.value(value: tvNowPlayingBloc),
+        ],
+        child: Sizer(
+          builder: ((context, orientation, deviceType) => MaterialApp(
+                home: TvWidget(),
+              )),
+        ),
       ),
-    ));
+    );
     expect(find.byType(Container), findsWidgets);
   });
 

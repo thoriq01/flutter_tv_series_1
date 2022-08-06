@@ -31,6 +31,7 @@ class MovieListPage extends StatefulWidget {
 
 class _MovieListPageState extends State<MovieListPage> with SingleTickerProviderStateMixin {
   var _searchMovie = TextEditingController();
+  var _searchTv = TextEditingController();
   TabController? controller;
 
   @override
@@ -47,7 +48,6 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
     context.read<TvNowPlayingBloc>().add(LoadTvNowPlaying());
 
     controller = TabController(length: 2, vsync: this);
-    controller!.index = 0;
   }
 
   @override
@@ -66,7 +66,7 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
               controller: controller,
               children: [
                 MovieAndTvPage(tipe: "movie", searchMovie: _searchMovie),
-                MovieAndTvPage(tipe: "tv", searchMovie: _searchMovie),
+                MovieAndTvPage(tipe: "tv", searchMovie: _searchTv),
               ],
             ),
           ),
@@ -126,7 +126,11 @@ class MovieAndTvPage extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("watchlist"));
+                  if (tipe == "tv") {
+                    Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("watchlist"));
+                  } else {
+                    Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("watchlist"));
+                  }
                 },
                 icon: Icon(
                   Icons.movie_creation,
@@ -141,7 +145,7 @@ class MovieAndTvPage extends StatelessWidget {
             tipe: tipe,
           ),
           SizedBox(height: 20),
-          tipe == "tv" ? TvWidget(tipe: "tv") : MovieWidget(tipe: "movie"),
+          tipe == "tv" ? TvWidget() : MovieWidget(),
           SizedBox(height: 20),
         ],
       ),
@@ -152,10 +156,7 @@ class MovieAndTvPage extends StatelessWidget {
 class MovieWidget extends StatelessWidget {
   const MovieWidget({
     Key? key,
-    required this.tipe,
   }) : super(key: key);
-
-  final String? tipe;
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +176,7 @@ class MovieWidget extends StatelessWidget {
               }
               return ListTile(
                 onTap: () {
-                  Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie(), tipe!));
+                  Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie(), "movies"));
                 },
                 leading: Container(
                   child: Image(
@@ -246,19 +247,17 @@ class MovieWidget extends StatelessWidget {
 class TvWidget extends StatelessWidget {
   const TvWidget({
     Key? key,
-    required this.tipe,
   }) : super(key: key);
-
-  final String? tipe;
 
   @override
   Widget build(BuildContext context) {
-    var movies = <Movie>[];
     return BlocBuilder<TvSearchBloc, TvSearchState>(builder: (context, state) {
       if (state is TvSearchLoaded) {
+        var movies = <Movie>[];
         state.tvList.forEach((element) {
           movies.add(element.tvToMovie());
         });
+
         return Container(
           height: 500,
           child: ListView.builder(
@@ -271,23 +270,26 @@ class TvWidget extends StatelessWidget {
                   child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
                 );
               }
-              return ListTile(
-                onTap: () {
-                  Navigator.pushNamed(context, movieDetailPage, arguments: DetailTvArgument(movies[index].movie(), tipe!));
-                },
-                leading: Container(
-                  child: Image(
-                    image: NetworkImage("https://image.tmdb.org/t/p/w500/${movies[index].posterPath!}"),
-                    fit: BoxFit.cover,
-                    width: 100,
-                    height: 100,
+              return Container(
+                margin: EdgeInsets.only(bottom: 10),
+                child: ListTile(
+                  onTap: () {
+                    Navigator.pushNamed(context, tvDetailPage, arguments: DetailTvArgument(movies[index].movie(), "tv"));
+                  },
+                  leading: Container(
+                    child: Image(
+                      image: NetworkImage("https://image.tmdb.org/t/p/w500/${movies[index].posterPath!}"),
+                      fit: BoxFit.cover,
+                      width: 100,
+                      height: 120,
+                    ),
                   ),
-                ),
-                title: Text(
-                  movies[index].title!,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 18,
+                  title: Text(
+                    movies[index].title!,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
               );
@@ -311,21 +313,21 @@ class TvWidget extends StatelessWidget {
             TitleContent(
               text: "Tv Now Playing",
               onPressed: () {
-                Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvnowplaying"));
+                Navigator.pushReplacementNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvnowplaying"));
               },
             ),
             TvNowPlayingWidget(),
             TitleContent(
               text: "Tv Popular",
               onPressed: () {
-                Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvpopular"));
+                Navigator.pushReplacementNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvpopular"));
               },
             ),
             TvPopularWidget(),
             TitleContent(
                 text: "Top Top Rated",
                 onPressed: () {
-                  Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvtoprated"));
+                  Navigator.pushReplacementNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("tvtoprated"));
                 }),
             TvTopRatedWidget(),
           ],
@@ -375,6 +377,7 @@ class SearchWidget extends StatelessWidget {
         ),
       ),
       onChanged: (value) {
+        print(tipe);
         if (tipe == "tv") {
           if (value.length > 1) {
             context.read<TvSearchBloc>().add(SearchTvEvent(value));
@@ -414,13 +417,6 @@ class MovieListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = <Movie>[];
-    if (tipe == "tv") {
-      movies.where((element) => element.tipe == 1).toList();
-    } else {
-      movies.where((element) => element.tipe == 2).toList();
-    }
-
     return Container(
       height: height,
       child: ListView.builder(

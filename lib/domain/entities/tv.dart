@@ -48,7 +48,7 @@ class Tv extends Equatable {
       overview: this.overview!,
       popularity: 60.441,
       posterPath: this.posterPath!,
-      releaseDate: this.firstAirDate!,
+      releaseDate: this.firstAirDate ?? "Coming soon",
       title: this.originalName!,
       video: false,
       voteAverage: this.voteAverage!,

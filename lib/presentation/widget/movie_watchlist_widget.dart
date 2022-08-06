@@ -39,14 +39,18 @@ class MovieWatchlistWidget extends StatelessWidget {
               }
             });
           }
-          if (state.movies.length > 0) {
+          if (loaded.length > 0) {
             return Container(
               child: Column(
                 children: [
                   TitleContent(
-                    text: "Watchlist",
+                    text: tipe == "tv" ? "TV Watchlist" : "Movie Watchlist",
                     onPressed: () {
-                      Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("watchlist"));
+                      if (tipe == "tv") {
+                        Navigator.pushNamed(context, tvTypeListPage, arguments: ListTypeTvArgument("watchlist"));
+                      } else {
+                        Navigator.pushNamed(context, movieTypeListPage, arguments: ListTypeMovieArgument("watchlist"));
+                      }
                     },
                   ),
                   MovieListCard(

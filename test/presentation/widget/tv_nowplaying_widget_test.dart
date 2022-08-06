@@ -3,8 +3,6 @@ import 'package:dicoding_tv_series/domain/usecase/tv_series.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_now_playing_bloc/tv_now_playing_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
-import 'package:dicoding_tv_series/presentation/pages/movie_list.dart';
-import 'package:dicoding_tv_series/presentation/widget/movie_watchlist_widget.dart';
 import 'package:dicoding_tv_series/presentation/widget/tv_now_playing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

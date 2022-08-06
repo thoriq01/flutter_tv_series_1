@@ -74,7 +74,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               ),
                               child: IconButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, movieListPage);
+                                  context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
+                                  Navigator.pop(context);
                                 },
                                 icon: Center(
                                   child: Container(
@@ -101,23 +102,24 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                   ),
                                 ),
                                 SizedBox(width: 30),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.date_range_outlined,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    Text(
-                                      state.movieDetail.releaseDate!,
-                                      style: TextStyle(fontSize: 14, color: Colors.white),
-                                    ),
-                                  ],
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.date_range_outlined,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                Text(
+                                  state.movieDetail.releaseDate!,
+                                  style: TextStyle(fontSize: 14, color: Colors.white),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 10),
 
                             Row(
                               children: [

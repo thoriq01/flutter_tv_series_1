@@ -16,13 +16,17 @@ class MovieRouter {
         return MaterialPageRoute(builder: (context) => MovieListPage());
       case movieDetailPage:
         var s = setting.arguments as DetailMovieArgument;
-        return MaterialPageRoute(builder: (context) => MovieDetailPage(movie: s.movie));
+        return MaterialPageRoute(builder: (context) => MovieDetailPage(movie: s.movie, tipe: s.tipe));
       case movieTypeListPage:
         var s = setting.arguments as ListTypeMovieArgument;
         return MaterialPageRoute(builder: (context) => MovieTypeListPage(category: s.category));
       case tvDetailPage:
         var s = setting.arguments as DetailTvArgument;
-        return MaterialPageRoute(builder: (context) => TvDetailPage(movie: s.tv));
+        return MaterialPageRoute(
+            builder: (context) => TvDetailPage(
+                  movie: s.tv,
+                  tipe: s.tipe,
+                ));
       case tvTypeListPage:
         var s = setting.arguments as ListTypeTvArgument;
         return MaterialPageRoute(builder: (context) => TvTypeListPage(category: s.category));

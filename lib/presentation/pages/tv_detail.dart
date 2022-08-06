@@ -31,14 +31,6 @@ class _TvDetailPageState extends State<TvDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var detail = MovieDetail(
-      adult: this.widget.movie!.adult,
-      overview: this.widget.movie!.overview,
-      id: this.widget.movie!.id,
-      posterPath: this.widget.movie!.posterPath,
-      title: this.widget.movie!.title,
-      tipe: 2,
-    );
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -75,7 +67,8 @@ class _TvDetailPageState extends State<TvDetailPage> {
                               ),
                               child: IconButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, movieListPage);
+                                  Navigator.pop(context);
+                                  context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
                                 },
                                 icon: Center(
                                   child: Container(
@@ -102,23 +95,25 @@ class _TvDetailPageState extends State<TvDetailPage> {
                                   ),
                                 ),
                                 SizedBox(width: 30),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.date_range_outlined,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    Text(
-                                      stateTv.releaseDate,
-                                      style: TextStyle(fontSize: 14, color: Colors.white),
-                                    ),
-                                  ],
+                              ],
+                            ),
+                            SizedBox(height: 10),
+
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.date_range_outlined,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                Text(
+                                  stateTv.releaseDate,
+                                  style: TextStyle(fontSize: 14, color: Colors.white),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 10),
 
                             Row(
                               children: [
@@ -297,7 +292,7 @@ class Recomendationwidget extends StatelessWidget {
       itemCount: movie.length,
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () => Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(movie[index].movie(), tipe)),
+          onTap: () => Navigator.pushNamed(context, tvDetailPage, arguments: DetailTvArgument(movie[index].movie(), tipe)),
           child: Column(
             children: [
               Container(
@@ -318,7 +313,7 @@ class Recomendationwidget extends StatelessWidget {
               Container(
                 width: 100,
                 child: Text(
-                  movie[index].title!,
+                  movie[index].title!.length > 20 ? movie[index].title!.substring(0, 15) + "..." : movie[index].title!,
                   style: TextStyle(fontSize: 15, color: Colors.white70),
                 ),
               ),

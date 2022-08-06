@@ -5,6 +5,7 @@ import 'package:dicoding_tv_series/presentation/pages/movie_detail.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/test_helper.mocks.dart';
@@ -30,8 +31,10 @@ void main() {
       final request = httpData.getUrl(Uri.parse("https://image.tmdb.org/t/p/w500/poster_path"));
     });
     await tester.pumpWidget(
-      MaterialApp(
-        home: test,
+      Sizer(
+        builder: (context, orientation, deviceType) => MaterialApp(
+          home: test,
+        ),
       ),
     );
     expect(find.byType(Container), findsWidgets);
@@ -50,14 +53,13 @@ void main() {
       final request = httpData.getUrl(Uri.parse("https://image.tmdb.org/t/p/w500/poster_path"));
     });
     await tester.pumpWidget(
-      MaterialApp(
-        home: test,
-      ),
+      Sizer(builder: (context, orientation, deviceType) => MaterialApp(home: test)),
     );
     expect(find.byType(Container), findsWidgets);
   });
   testWidgets("Test", (tester) async {
-    await tester.pumpWidget(MaterialApp(home: RecomendationWidget(movies: testMovieList, tipe: "movies")));
+    await tester.pumpWidget(
+        Sizer(builder: ((context, orientation, deviceType) => MaterialApp(home: RecomendationWidget(movies: testMovieList, tipe: "movies")))));
     expect(find.byType(Text), findsWidgets);
   });
   testWidgets("Test", (tester) async {
