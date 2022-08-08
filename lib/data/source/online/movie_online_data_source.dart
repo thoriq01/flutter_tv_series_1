@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dicoding_tv_series/common/constant.dart';
 import 'package:dicoding_tv_series/common/failure.dart';
@@ -8,7 +9,9 @@ import 'package:dicoding_tv_series/data/models/movie_detail_model.dart';
 import 'package:dicoding_tv_series/data/models/movie_response.dart';
 import 'package:dicoding_tv_series/data/models/tv_model.dart';
 import 'package:dicoding_tv_series/data/models/tv_response.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 
 abstract class MovideDataRepository {
   Future<List<MovieModel>> getNowPlayingMovies();
@@ -30,9 +33,24 @@ class MovieDataSource implements MovideDataRepository {
   final http.Client client;
   MovieDataSource({required this.client});
 
+  Future<SecurityContext> get globalContext async {
+    final sslCert = await rootBundle.load('assets/movie.pem');
+    SecurityContext securityContext = SecurityContext(withTrustedRoots: false);
+    securityContext.setTrustedCertificatesBytes(sslCert.buffer.asInt8List());
+    return securityContext;
+  }
+
+  Future getData(String baseUrl) async {
+    HttpClient client = HttpClient(context: await globalContext);
+    client.badCertificateCallback = (X509Certificate cert, String host, int port) => false;
+    IOClient ioClient = IOClient(client);
+    final response = await ioClient.get(Uri.parse(baseUrl));
+    return response;
+  }
+
   @override
   Future<MovieDetailResponse> getDetailMovies(int id) async {
-    final response = await client.get(Uri.parse("$BASE_URL/movie/$id?$API_KEY"));
+    final response = await getData("$BASE_URL/movie/$id?$API_KEY");
     if (response.statusCode == 200) {
       return MovieDetailResponse.fromJson(json.decode(response.body));
     } else {
@@ -42,7 +60,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<MovieModel>> getNowPlayingMovies() async {
-    final response = await client.get(Uri.parse("$BASE_URL/movie/now_playing?$API_KEY"));
+    final response = await getData("$BASE_URL/movie/now_playing?$API_KEY");
     if (response.statusCode == 200) {
       return MovieResponse.fromJson(json.decode(response.body)).movieList;
     } else {
@@ -52,7 +70,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<MovieModel>> getPopularMovies() async {
-    final response = await client.get(Uri.parse("$BASE_URL/movie/popular?$API_KEY"));
+    final response = await getData("$BASE_URL/movie/popular?$API_KEY");
     if (response.statusCode == 200) {
       return MovieResponse.fromJson(json.decode(response.body)).movieList;
     } else {
@@ -62,7 +80,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<MovieModel>> getRecomendationsMovies(int id) async {
-    final response = await client.get(Uri.parse("$BASE_URL/movie/$id/recommendations?$API_KEY"));
+    final response = await getData("$BASE_URL/movie/$id/recommendations?$API_KEY");
     if (response.statusCode == 200) {
       return MovieResponse.fromJson(json.decode(response.body)).movieList;
     } else {
@@ -72,7 +90,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<MovieModel>> getTopRatedMovies() async {
-    final response = await client.get(Uri.parse('$BASE_URL/movie/top_rated?$API_KEY'));
+    final response = await getData('$BASE_URL/movie/top_rated?$API_KEY');
     if (response.statusCode == 200) {
       return MovieResponse.fromJson(json.decode(response.body)).movieList;
     } else {
@@ -82,7 +100,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<MovieModel>> searchMovies(String query) async {
-    final response = await client.get(Uri.parse('$BASE_URL/search/movie?$API_KEY&query=$query'));
+    final response = await getData('$BASE_URL/search/movie?$API_KEY&query=$query');
     if (response.statusCode == 200) {
       return MovieResponse.fromJson(json.decode(response.body)).movieList;
     } else {
@@ -92,7 +110,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<MovieCast>> getMovieCast(int id) async {
-    final response = await client.get(Uri.parse('$BASE_URL/movie/$id/credits?$API_KEY'));
+    final response = await getData('$BASE_URL/movie/$id/credits?$API_KEY');
     if (response.statusCode == 200) {
       return MovieCastResponse.fromJson(json.decode(response.body)).movieCast;
     } else {
@@ -102,7 +120,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<TvModel>> getNowPlayingTv() async {
-    final response = await client.get(Uri.parse('$BASE_URL/tv/on_the_air?$API_KEY'));
+    final response = await getData('$BASE_URL/tv/on_the_air?$API_KEY');
     if (response.statusCode == 200) {
       return TvResponse.fromJson(json.decode(response.body)).tvList;
     } else {
@@ -112,7 +130,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<TvModel>> getPopularTv() async {
-    final response = await client.get(Uri.parse('$BASE_URL/tv/popular?$API_KEY'));
+    final response = await getData('$BASE_URL/tv/popular?$API_KEY');
     if (response.statusCode == 200) {
       return TvResponse.fromJson(json.decode(response.body)).tvList;
     } else {
@@ -122,7 +140,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<TvModel>> getTopRatedTv() async {
-    final response = await client.get(Uri.parse('https://api.themoviedb.org/3/tv/top_rated?$API_KEY'));
+    final response = await getData('https://api.themoviedb.org/3/tv/top_rated?$API_KEY');
     if (response.statusCode == 200) {
       return TvResponse.fromJson(json.decode(response.body)).tvList;
     } else {
@@ -132,7 +150,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<TvModel> getDetailTv(int id) async {
-    final response = await client.get(Uri.parse('https://api.themoviedb.org/3/tv/$id?$API_KEY'));
+    final response = await getData('https://api.themoviedb.org/3/tv/$id?$API_KEY');
     if (response.statusCode == 200) {
       return TvModel.fromJson(json.decode(response.body));
     } else {
@@ -142,7 +160,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<TvModel>> getRecomendationTv(int id) async {
-    final response = await client.get(Uri.parse('https://api.themoviedb.org/3/tv/$id/recommendations?$API_KEY'));
+    final response = await getData('https://api.themoviedb.org/3/tv/$id/recommendations?$API_KEY');
     if (response.statusCode == 200) {
       return TvResponse.fromJson(json.decode(response.body)).tvList;
     } else {
@@ -152,7 +170,7 @@ class MovieDataSource implements MovideDataRepository {
 
   @override
   Future<List<TvModel>> searchTv(String query) async {
-    final response = await client.get(Uri.parse('https://api.themoviedb.org/3/search/tv?$API_KEY&query=$query'));
+    final response = await getData('https://api.themoviedb.org/3/search/tv?$API_KEY&query=$query');
     if (response.statusCode == 200) {
       return TvResponse.fromJson(json.decode(response.body)).tvList;
     } else {

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "567216476789",
+    "project_id": "tv-series-crashlytic",
+    "storage_bucket": "tv-series-crashlytic.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567216476789:android:90a7f726e6f8cbc89d1e3c",
+        "android_client_info": {
+          "package_name": "id.submission.dicoding_tv_series"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567216476789-lnljihjqc5bi0dta9gf2ur5b9vlip8i2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrOiMHdxHsSRJeLMtNhoAijilCFxGrc1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567216476789-lnljihjqc5bi0dta9gf2ur5b9vlip8i2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

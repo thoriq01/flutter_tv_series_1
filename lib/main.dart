@@ -13,12 +13,15 @@ import 'package:dicoding_tv_series/presentation/bloc/tv_popular_bloc/tv_popular_
 import 'package:dicoding_tv_series/presentation/bloc/tv_recomendation_bloc/tv_recomendation_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_search_bloc/tv_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'injector.dart' as dl;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   dl.init();
   runApp(MyApp());
 }
