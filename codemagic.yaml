@@ -1,0 +1,34 @@
+workflows:
+  android-workflow:
+    name: Flutter Tv Series (Dicoding Submission)
+    max_build_duration: 120
+    
+    scripts:
+     
+      - name: Get Flutter packages
+        script: |
+                    flutter packages pub get
+      - name: Flutter analyze
+        script: |
+                    flutter analyze
+      - name: Flutter unit tests
+        script: |
+                    flutter test
+        ignore_failure: true
+      - name: Build APK with Flutter
+        script: |
+                    flutter build apk --release --build-name=1.0.0 --build-number=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks "$GOOGLE_PLAY_TRACK") + 1))
+    artifacts:
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/apk/**/*.apk
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+    publishing:
+      # See the following link for details about email publishing - https://docs.codemagic.io/yaml-publishing/email
+      email:
+        recipients:
+          - thoriq@harmoni-integra.com
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      
