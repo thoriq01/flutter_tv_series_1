@@ -167,41 +167,7 @@ class MovieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MovieSearchBloc, MovieSearchBlocState>(builder: (context, state) {
       if (state is MovieSearchBlocLoaded) {
-        return Container(
-          height: 500,
-          child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: (state.movies.length),
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) {
-              if (state.movies.length == 0) {
-                return Center(
-                  child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
-                );
-              }
-              return ListTile(
-                onTap: () {
-                  Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(state.movies[index].movie(), "movies"));
-                },
-                leading: Container(
-                  child: Image(
-                    image: NetworkImage("https://image.tmdb.org/t/p/w500/${state.movies[index].posterPath!}"),
-                    fit: BoxFit.cover,
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
-                title: Text(
-                  state.movies[index].title!,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 18,
-                  ),
-                ),
-              );
-            },
-          ),
-        );
+        return MovieSearchWidget(movies: state.movies);
       } else if (state is MovieSearchBlocError) {
         return Center(
           child: Text(state.message),
@@ -249,6 +215,53 @@ class MovieWidget extends StatelessWidget {
   }
 }
 
+class MovieSearchWidget extends StatelessWidget {
+  final List<Movie> movies;
+  const MovieSearchWidget({
+    Key? key,
+    required this.movies,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 500,
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: (movies.length),
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          if (movies.length == 0) {
+            return Center(
+              child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
+            );
+          }
+          return ListTile(
+            onTap: () {
+              Navigator.pushNamed(context, movieDetailPage, arguments: DetailMovieArgument(movies[index].movie(), "movies"));
+            },
+            leading: Container(
+              child: Image(
+                image: NetworkImage("https://image.tmdb.org/t/p/w500/${movies[index].posterPath!}"),
+                fit: BoxFit.cover,
+                width: 100,
+                height: 100,
+              ),
+            ),
+            title: Text(
+              movies[index].title!,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 18,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class TvWidget extends StatelessWidget {
   const TvWidget({
     Key? key,
@@ -262,45 +275,7 @@ class TvWidget extends StatelessWidget {
         state.tvList.forEach((element) {
           movies.add(element.tvToMovie());
         });
-
-        return Container(
-          height: 500,
-          child: ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: (movies.length),
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) {
-              if (movies.length == 0) {
-                return Center(
-                  child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
-                );
-              }
-              return Container(
-                margin: EdgeInsets.only(bottom: 10),
-                child: ListTile(
-                  onTap: () {
-                    Navigator.pushNamed(context, tvDetailPage, arguments: DetailTvArgument(movies[index].movie(), "tv"));
-                  },
-                  leading: Container(
-                    child: Image(
-                      image: NetworkImage("https://image.tmdb.org/t/p/w500/${movies[index].posterPath!}"),
-                      fit: BoxFit.cover,
-                      width: 100,
-                      height: 120,
-                    ),
-                  ),
-                  title: Text(
-                    movies[index].title!,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        );
+        return TvSearchWidget(movies: movies);
       } else if (state is TvSearchError) {
         return Center(
           child: Text(state.message),
@@ -343,6 +318,57 @@ class TvWidget extends StatelessWidget {
         );
       }
     });
+  }
+}
+
+class TvSearchWidget extends StatelessWidget {
+  final List<Movie> movies;
+
+  const TvSearchWidget({
+    Key? key,
+    required this.movies,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 500,
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: (movies.length),
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          if (movies.length == 0) {
+            return Center(
+              child: Text('No Data', style: TextStyle(color: Colors.white, fontSize: 20)),
+            );
+          }
+          return Container(
+            margin: EdgeInsets.only(bottom: 10),
+            child: ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, tvDetailPage, arguments: DetailTvArgument(movies[index].movie(), "tv"));
+              },
+              leading: Container(
+                child: Image(
+                  image: NetworkImage("https://image.tmdb.org/t/p/w500/${movies[index].posterPath!}"),
+                  fit: BoxFit.cover,
+                  width: 100,
+                  height: 120,
+                ),
+              ),
+              title: Text(
+                movies[index].title!,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 

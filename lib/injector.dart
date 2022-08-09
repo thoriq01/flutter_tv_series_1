@@ -1,6 +1,7 @@
 import 'package:dicoding_tv_series/data/repository/movie_model_repository.dart';
 import 'package:dicoding_tv_series/data/source/local/movie_local_source.dart';
 import 'package:dicoding_tv_series/data/source/online/movie_online_data_source.dart';
+import 'package:dicoding_tv_series/data/source/online/ssl_pinning.dart';
 import 'package:dicoding_tv_series/domain/repositories/movie_repositorie.dart';
 import 'package:dicoding_tv_series/domain/usecase/get_cast_movie.dart';
 import 'package:dicoding_tv_series/domain/usecase/get_detail_movie.dart';
@@ -26,7 +27,6 @@ import 'package:dicoding_tv_series/presentation/bloc/tv_recomendation_bloc/tv_re
 import 'package:dicoding_tv_series/presentation/bloc/tv_search_bloc/tv_search_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_top_rated_bloc/tv_top_rated_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 
 import 'data/source/local/movies_local_data_source.dart';
 
@@ -49,6 +49,7 @@ void init() {
 
   sl.registerFactory(() => TvNowPlayingBloc(sl()));
   sl.registerFactory(() => TvRecomendationBloc(sl()));
+  sl.registerLazySingleton(() => SSLPinning.client);
 
   sl.registerLazySingleton(() => GetPopularMovie(sl()));
   sl.registerLazySingleton(() => GetTopRatedMovie(sl()));
@@ -61,7 +62,6 @@ void init() {
   sl.registerLazySingleton(() => TvSeries(sl()));
 
   sl.registerLazySingleton<MovieRepository>(() => MovieModelRepository(sl(), sl()));
-  sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   sl.registerLazySingleton(() => MovieDataSource(client: sl()));

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dicoding_tv_series/domain/entities/cast.dart';
 import 'package:dicoding_tv_series/presentation/pages/movie_detail.dart';
+import 'package:dicoding_tv_series/presentation/pages/movie_list.dart';
 import 'package:dicoding_tv_series/presentation/widget/movie_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -69,5 +70,24 @@ void main() {
       cast: [dataCast],
     )));
     expect(find.byType(Text), findsWidgets);
+  });
+
+  testWidgets("Test", (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Material(
+      child: TvSearchWidget(
+        movies: testMovieList,
+      ),
+    )));
+    expect(find.byType(Container), findsWidgets);
+  });
+  testWidgets("Test", (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Material(
+      child: MovieSearchWidget(
+        movies: testMovieList,
+      ),
+    )));
+    expect(find.byType(Container), findsWidgets);
   });
 }

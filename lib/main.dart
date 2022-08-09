@@ -1,4 +1,5 @@
 import 'package:dicoding_tv_series/config/router/movie_router.dart';
+import 'package:dicoding_tv_series/data/source/online/ssl_pinning.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_cast_bloc/movie_cast_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_now_playing_bloc/movie_now_playing_bloc.dart';
@@ -22,6 +23,7 @@ import 'injector.dart' as dl;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await SSLPinning.init();
   dl.init();
   runApp(MyApp());
 }

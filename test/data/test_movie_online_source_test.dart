@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dicoding_tv_series/common/failure.dart';
 import 'package:dicoding_tv_series/data/models/movie_detail_model.dart';
+import 'package:dicoding_tv_series/data/models/movie_model.dart';
 import 'package:dicoding_tv_series/data/models/movie_response.dart';
 import 'package:dicoding_tv_series/data/models/tv_response.dart';
 import 'package:dicoding_tv_series/data/source/online/movie_online_data_source.dart';
+import 'package:dicoding_tv_series/data/source/online/ssl_pinning.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +22,6 @@ void main() {
 
   late MovieDataSource dataSource;
   late MockHttpClient mockHttpClient;
-
   setUp(() {
     mockHttpClient = MockHttpClient();
     dataSource = MovieDataSource(client: mockHttpClient);
@@ -30,12 +32,11 @@ void main() {
 
     test('should return list of movies when response is success (200)', () async {
       // arrange
-      when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/popular?$API_KEY')))
-          .thenAnswer((_) async => http.Response(readJson('dummy_data/popular.json'), 200));
+      var c = await SSLPinning.client.get(Uri.parse('$BASE_URL/movie/popular?$API_KEY'));
+
       // act
-      final result = dataSource.getPopularMovies();
       // assert
-      expect(result, throwsA(isA<ServerException>()));
+      expect(c.statusCode, 400);
     });
 
     test('should throw a ServerException when the response code is 404 or other', () async {

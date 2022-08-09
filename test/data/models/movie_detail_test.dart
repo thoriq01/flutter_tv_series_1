@@ -40,4 +40,33 @@ void main() {
     final Map<String, dynamic> jsonMap = json.decode(readJson('dummy_data/movie_detail.json'));
     expect(result, jsonMap);
   });
+
+  test("Test", () {
+    expect(
+      data.props,
+      [
+        data.adult,
+        data.backdropPath,
+        data.budget,
+        data.genres,
+        data.homepage,
+        data.id,
+        data.imdbId,
+        data.originalLanguage,
+        data.originalTitle,
+        data.overview,
+        data.popularity,
+        data.posterPath,
+        data.releaseDate,
+        data.revenue,
+        data.runtime,
+        data.status,
+        data.tagline,
+        data.title,
+        data.video,
+        data.voteAverage,
+        data.voteCount,
+      ],
+    );
+  });
 }
