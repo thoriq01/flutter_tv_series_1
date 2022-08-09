@@ -11,7 +11,11 @@ class MoviePopularBlocWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MoviePopularBlocBloc, MoviePopularBlocState>(builder: (context, state) {
-      if (state is MoviePopularLoaded) {
+      if (state is MoviePopularLoading) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is MoviePopularLoaded) {
         return MovieListCard(
           tipe: "movie",
           length: 2,
@@ -20,13 +24,10 @@ class MoviePopularBlocWidget extends StatelessWidget {
           movies: state.movies,
           direction: Axis.vertical,
         );
-      } else if (state is MoviePopularError) {
-        return Center(
-          child: Text(state.message),
-        );
       } else {
+        state as MoviePopularError;
         return Center(
-          child: CircularProgressIndicator(),
+          child: Text(state.message, style: TextStyle(color: Colors.red)),
         );
       }
     });

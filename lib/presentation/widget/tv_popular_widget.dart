@@ -29,7 +29,7 @@ class TvPopularWidget extends StatelessWidget {
         );
       } else if (state is TvPopularError) {
         return Center(
-          child: Text(state.message),
+          child: Text(state.message, style: TextStyle(color: Colors.red)),
         );
       } else {
         return Center(

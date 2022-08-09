@@ -12,11 +12,14 @@ class MovieNowPlayingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<MovieNowPlayingBloc, MovieNowPlayingState>(
       builder: (context, state) {
+        print(state);
         if (state is MovienowPlayingLoading) {
-          return Container();
+          return CircularProgressIndicator();
         } else if (state is MovieNowPlayingError) {
-          return Center(
-            child: Text(state.message),
+          return Container(
+            child: Center(
+              child: Text(state.message, style: TextStyle(color: Colors.red)),
+            ),
           );
         } else if (state is MovieNowPlayingLoaded) {
           if (state.movies.length > 0) {

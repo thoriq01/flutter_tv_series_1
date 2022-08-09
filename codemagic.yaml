@@ -4,6 +4,14 @@ workflows:
   android-workflow:
     name: Flutter Tv Series (Dicoding Submission)
     
+    triggering:
+      events:
+        - push
+      branch_patterns: 
+        - pattern: *
+        - pattern: develop
+          include: false
+      cancel_previous_builds: true
     max_build_duration: 120
     scripts:
       - name: Get Flutter packages

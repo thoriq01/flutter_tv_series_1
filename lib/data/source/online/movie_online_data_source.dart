@@ -10,9 +10,7 @@ import 'package:dicoding_tv_series/data/models/movie_response.dart';
 import 'package:dicoding_tv_series/data/models/tv_model.dart';
 import 'package:dicoding_tv_series/data/models/tv_response.dart';
 import 'package:dicoding_tv_series/data/source/online/ssl_pinning.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
 
 abstract class MovideDataRepository {
   Future<List<MovieModel>> getNowPlayingMovies();

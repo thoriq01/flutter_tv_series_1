@@ -25,13 +25,15 @@ class MovieModelRepository implements MovieRepository {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, MovieDetail>> getMovieDetail(int id) async {
-    final response = await remoteDataSource.getDetailMovies(id);
     try {
+      final response = await remoteDataSource.getDetailMovies(id);
       return Right(response.toEntity());
     } on ServerException {
       return Left(ServerFailure("Failed to load movie detail"));
@@ -42,37 +44,44 @@ class MovieModelRepository implements MovieRepository {
 
   @override
   Future<Either<Failure, List<Movie>>> getMovieRecommendations(int id) async {
-    final response = await remoteDataSource.getRecomendationsMovies(id);
     try {
+      final response = await remoteDataSource.getRecomendationsMovies(id);
+
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, List<Movie>>> getPopularMovies() async {
-    final response = await remoteDataSource.getPopularMovies();
     try {
+      final response = await remoteDataSource.getPopularMovies();
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, List<Movie>>> getTopRatedMovies() async {
-    final response = await remoteDataSource.getTopRatedMovies();
     try {
+      final response = await remoteDataSource.getTopRatedMovies();
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
@@ -96,8 +105,9 @@ class MovieModelRepository implements MovieRepository {
 
   @override
   Future<Either<Failure, List<Movie>>> searchMovies(String query) async {
-    final response = await remoteDataSource.searchMovies(query);
     try {
+      final response = await remoteDataSource.searchMovies(query);
+
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
@@ -108,8 +118,9 @@ class MovieModelRepository implements MovieRepository {
 
   @override
   Future<Either<Failure, List<MovieCastEntities>>> getMovieCast(int id) async {
-    final result = await remoteDataSource.getMovieCast(id);
     try {
+      final result = await remoteDataSource.getMovieCast(id);
+
       return Right(result.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
@@ -126,73 +137,91 @@ class MovieModelRepository implements MovieRepository {
 
   @override
   Future<Either<Failure, List<Tv>>> getNowPlayingTv() async {
-    final response = await remoteDataSource.getNowPlayingTv();
     try {
+      final response = await remoteDataSource.getNowPlayingTv();
+
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, List<Tv>>> getPopularTv() async {
-    final response = await remoteDataSource.getPopularTv();
     try {
+      final response = await remoteDataSource.getPopularTv();
+
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, List<Tv>>> getTopRatedTv() async {
-    final response = await remoteDataSource.getTopRatedTv();
     try {
+      final response = await remoteDataSource.getTopRatedTv();
+
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, Tv>> getTvDetail(int id) async {
-    final response = await remoteDataSource.getDetailTv(id);
     try {
+      final response = await remoteDataSource.getDetailTv(id);
+
       return Right(response.toEntity());
     } on ServerException {
       return Left(ServerFailure("Failed to load tv detail"));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, List<Tv>>> getTvRecomendation(int id) async {
-    final response = await remoteDataSource.getRecomendationTv(id);
     try {
+      final response = await remoteDataSource.getRecomendationTv(id);
+
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure("Failed to load tv detail"));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 
   @override
   Future<Either<Failure, List<Tv>>> searchTv(String query) async {
-    final response = await remoteDataSource.searchTv(query);
     try {
+      final response = await remoteDataSource.searchTv(query);
+
       return Right(response.map((model) => model.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException {
+      return Left(SSLFailure('CERTIFICATE_VERIFY_FAILED'));
     }
   }
 }

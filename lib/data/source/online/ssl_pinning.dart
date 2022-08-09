@@ -15,7 +15,7 @@ class SSLPinning {
 
 class VerifyCertificate {
   static Future getData() async {
-    final sslCert = await rootBundle.load('assets/movie.pem');
+    final sslCert = await rootBundle.load('assets/dicoding.pem');
     SecurityContext securityContext = SecurityContext(withTrustedRoots: false);
 
     securityContext.setTrustedCertificatesBytes(sslCert.buffer.asInt8List());
