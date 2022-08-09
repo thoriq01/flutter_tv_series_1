@@ -5,13 +5,16 @@ workflows:
     name: Flutter Tv Series (Dicoding Submission)
     
     triggering:
-      events:
+      events:                       # List the events that trigger builds
         - push
-      branch_patterns: 
-        - pattern: *
-        - pattern: develop
-          include: false
-      cancel_previous_builds: true
+      branch_patterns:              # Include or exclude watched branches
+        - pattern: '*'
+          include: true
+          source: true
+      tag_patterns:                 # Include or exlude watched tag labels
+        - pattern: '*'
+          include: true
+      cancel_previous_builds: false  
     max_build_duration: 120
     scripts:
       - name: Get Flutter packages
