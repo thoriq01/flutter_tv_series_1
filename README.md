@@ -15,4 +15,4 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 
 -       
-[![Codemagic build status](https://api.codemagic.io/apps/62f12dbc033f9c26f44e5fd5/android-workflow/status_badge.svg)](https://codemagic.io/apps/62f12dbc033f9c26f44e5fd5/android-workflow/latest_build)
+[![Codemagic build status](https://api.codemagic.io/apps/62f12dbc033f9c26f44e5fd5/android-workflow/status_badge.svg)](https://api.codemagic.io/apps/62f12dbc033f9c26f44e5fd5/android-workflow/status_badge.svg)
