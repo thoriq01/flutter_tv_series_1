@@ -77,7 +77,7 @@ class _MovieListPageState extends State<MovieListPage> with SingleTickerProvider
         height: 60,
         child: TabBar(
           onTap: (value) {
-            FirebaseCrashlytics.instance.crash();
+            // FirebaseCrashlytics.instance.crash();
 
             setState(() {});
           },

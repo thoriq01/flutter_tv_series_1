@@ -31,6 +31,7 @@ abstract class MovideDataRepository {
 
 class MovieDataSource implements MovideDataRepository {
   final http.Client client;
+  int tipe = 0;
   MovieDataSource({required this.client});
 
   Future<SecurityContext> get globalContext async {

@@ -1,10 +1,11 @@
 workflows:
+  release-workflow:
+    name: release
   android-workflow:
     name: Flutter Tv Series (Dicoding Submission)
-    max_build_duration: 120
     
+    max_build_duration: 120
     scripts:
-     
       - name: Get Flutter packages
         script: |
                     flutter packages pub get
@@ -28,4 +29,3 @@ workflows:
         notify:
           success: true # To receive a notification when a build succeeds
           failure: false # To not receive a notification when a build fails
-      

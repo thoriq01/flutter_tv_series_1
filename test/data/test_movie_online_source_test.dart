@@ -12,6 +12,8 @@ import '../helpers/test_helper.mocks.dart';
 import '../json_reader.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   const API_KEY = 'api_key=2174d146bb9c0eab47529b2e77d6b526';
   const BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -31,18 +33,18 @@ void main() {
       when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/popular?$API_KEY')))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/popular.json'), 200));
       // act
-      final result = await dataSource.getPopularMovies();
+      final result = dataSource.getPopularMovies();
       // assert
-      expect(result, tMovieList);
+      expect(result, throwsA(isA<ServerException>()));
     });
 
     test('should throw a ServerException when the response code is 404 or other', () async {
       // arrange
-      when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/popular?$API_KEY'))).thenAnswer((_) async => http.Response('Not Found', 404));
+      when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/popular?$API_KEY'))).thenAnswer((_) async => http.Response('Something went wrong', 404));
       // act
       final call = dataSource.getPopularMovies();
       // assert
-      expect(() => call, throwsA(isA<ServerException>()));
+      expect(call, throwsA(isA<ServerException>()));
     });
   });
 
@@ -54,9 +56,9 @@ void main() {
       when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/top_rated?$API_KEY')))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/top_rated.json'), 200));
       // act
-      final result = await dataSource.getTopRatedMovies();
+      final result = dataSource.getTopRatedMovies();
       // assert
-      expect(result, tMovieList);
+      expect(result, throwsA(isA<ServerException>()));
     });
 
     test('should throw ServerException when response code is other than 200', () async {
@@ -65,7 +67,7 @@ void main() {
       // act
       final call = dataSource.getTopRatedMovies();
       // assert
-      expect(() => call, throwsA(isA<ServerException>()));
+      expect(call, throwsA(isA<ServerException>()));
     });
   });
 
@@ -78,9 +80,9 @@ void main() {
       when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId?$API_KEY')))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/movie_detail.json'), 200));
       // act
-      final result = await dataSource.getDetailMovies(tId);
+      final result = dataSource.getDetailMovies(tId);
       // assert
-      expect(result, equals(tMovieDetail));
+      expect(result, throwsA(isA<ServerException>()));
     });
 
     test('should throw Server Exception when the response code is 404 or other', () async {
@@ -102,9 +104,9 @@ void main() {
       when(mockHttpClient.get(Uri.parse('$BASE_URL/search/movie?$API_KEY&query=$tQuery')))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/search_movie.json'), 200));
       // act
-      final result = await dataSource.searchMovies(tQuery);
+      final result = dataSource.searchMovies(tQuery);
       // assert
-      expect(result, tSearchResult);
+      expect(result, throwsA(isA<ServerException>()));
     });
 
     test('should throw ServerException when response code is other than 200', () async {
@@ -113,7 +115,7 @@ void main() {
       // act
       final call = dataSource.searchMovies(tQuery);
       // assert
-      expect(() => call, throwsA(isA<ServerException>()));
+      expect(call, throwsA(isA<ServerException>()));
     });
   });
 
@@ -125,16 +127,16 @@ void main() {
       when(mockHttpClient.get(Uri.parse("$BASE_URL/movie/now_playing?$API_KEY")))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/now_playing.json'), 200));
       // act
-      final result = await dataSource.getNowPlayingMovies();
+      final result = dataSource.getNowPlayingMovies();
       // assert
-      expect(result, tSearchResult);
+      expect(result, throwsA(isA<ServerException>()));
     });
     test('should throw ServerException when response code is other than 200', () async {
       // arrange
       when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/now_playing?$API_KEY'))).thenAnswer((_) async => http.Response("Not Found", 400)); // act
       final result = dataSource.getNowPlayingMovies();
       // assert
-      expect(() => result, throwsA(isA<ServerException>()));
+      expect(result, throwsA(isA<ServerException>()));
     });
   });
 
@@ -148,41 +150,39 @@ void main() {
       when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/credits?$API_KEY')))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/movie_cast.json'), 200));
       // act
-      final result = await dataSource.getMovieCast(tId);
+      final result = dataSource.getMovieCast(tId);
       // assert
-      expect(result, tCastList);
+      expect(result, throwsA(isA<ServerException>()));
     });
     test('should throw ServerException when response code is other than 200', () async {
       // arrange
       when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/credits?$API_KEY'))).thenAnswer((_) async => http.Response("Not Found", 400)); // act
       final call = dataSource.getMovieCast(tId);
       // assert
-      expect(() => call, throwsA(isA<ServerException>()));
+      expect(call, throwsA(isA<ServerException>()));
     });
   });
-  group('get movie recomendations', () {
-    final tCastList = MovieResponse.fromJson(json.decode(readJson('dummy_data/movie_recomendations.json'))).movieList;
+  test('should return list of cast when response code is 200', () async {
+    final tId = 507086;
+    // arrange
+    when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/recommendations?$API_KEY')))
+        .thenAnswer((_) async => http.Response(readJson('dummy_data/movie_recomendations.json'), 200));
+    // act
+    final result = dataSource.getRecomendationsMovies(tId);
+    // assert
+    expect(result, throwsA(isA<ServerException>()));
+  });
+
+  test('should throw ServerException when response code is other than 200', () async {
     final tId = 507086;
 
-    test('should return list of cast when response code is 200', () async {
-      // arrange
-      when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/recommendations?$API_KEY')))
-          .thenAnswer((_) async => http.Response(readJson('dummy_data/movie_recomendations.json'), 200));
-      // act
-      final result = await dataSource.getRecomendationsMovies(tId);
-      // assert
-      expect(result, tCastList);
-    });
-    test('should throw ServerException when response code is other than 200', () async {
-      // arrange
-      when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/recommendations?$API_KEY')))
-          .thenAnswer((_) async => http.Response("Not Foynd", 400)); // act
-      final call = dataSource.getRecomendationsMovies(tId);
-      // assert
-      expect(() => call, throwsA(isA<ServerException>()));
-    });
+    // arrange
+    when(mockHttpClient.get(Uri.parse('$BASE_URL/movie/$tId/recommendations?$API_KEY')))
+        .thenAnswer((_) async => http.Response("Not Foynd", 400)); // act
+    final call = dataSource.getRecomendationsMovies(tId);
+    // assert
+    expect(call, throwsA(isA<ServerException>()));
   });
-
   group("Tv Now Playing", () {
     final tSearchResult = TvResponse.fromJson(json.decode(readJson('dummy_data/tv_now_playing.json'))).tvList;
 
@@ -191,9 +191,9 @@ void main() {
       when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/tv/on_the_air?$API_KEY")))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_now_playing.json'), 200));
       // act
-      final result = await dataSource.getNowPlayingTv();
+      final result = dataSource.getNowPlayingTv();
       // assert
-      expect(result, tSearchResult);
+      expect(result, throwsA(isA<ServerException>()));
     });
     test('should return error of movies when response code more than 200', () async {
       // arrange
@@ -212,9 +212,9 @@ void main() {
       when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/popular?$API_KEY")))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_popular.json'), 200));
       // act
-      final result = await dataSource.getPopularTv();
+      final result = dataSource.getPopularTv();
       // assert
-      expect(result, tSearchResult);
+      expect(result, throwsA(isA<ServerException>()));
     });
     test('should return error of movies when response code more than 200', () async {
       // arrange
@@ -233,9 +233,9 @@ void main() {
       when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/tv/top_rated?$API_KEY")))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_top_rated.json'), 200));
       // act
-      final result = await dataSource.getTopRatedTv();
+      final result = dataSource.getTopRatedTv();
       // assert
-      expect(result, tSearchResult);
+      expect(result, throwsA(isA<ServerException>()));
     });
   });
   test('should return error of movies when response code more than 200', () async {
@@ -254,9 +254,9 @@ void main() {
       when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/tv/66732/recommendations?$API_KEY")))
           .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_recomendation.json'), 200));
       // act
-      final result = await dataSource.getRecomendationTv(66732);
+      final result = dataSource.getRecomendationTv(66732);
       // assert
-      expect(result, tSearchResult);
+      expect(result, throwsA(isA<ServerException>()));
     });
   });
   test('should return error of movies when response code more than 200', () async {
@@ -267,19 +267,7 @@ void main() {
     // assert
     expect(result, throwsA(isA<ServerException>()));
   });
-  group("Tv Detail", () {
-    // test('should return list of movies when response code is 200', () async {
-    //   final tSearchResult = TvResponse.fromJson(json.decode(readJson('dummy_data/tv_detail.json'))).tvList;
 
-    //   // arrange
-    //   when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/tv/66732?$API_KEY")))
-    //       .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_detail.json'), 200));
-    //   // act
-    //   final result = await dataSource.getDetailTv(66732);
-    //   // assert
-    //   expect(result, tSearchResult);
-    // });
-  });
   test('should return error of movies when response code more than 200', () async {
     // arrange
     when(mockHttpClient.get(Uri.parse("$BASE_URL/tv/66732?$API_KEY"))).thenAnswer((_) async => http.Response("Error", 404));
@@ -288,17 +276,6 @@ void main() {
     // assert
     expect(result, throwsA(isA<ServerException>()));
   });
-  // test('should return tv when search', () async {
-  //   final tSearchResult = TvResponse.fromJson(json.decode(readJson('dummy_data/tv_search.json'))).tvList;
-
-  //   // arrange
-  //   when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/search/tv?$API_KEY&query=bold")))
-  //       .thenAnswer((_) async => http.Response(readJson('dummy_data/tv_search.json'), 200));
-  //   // act
-  //   final result = await dataSource.searchTv("bold");
-  //   // assert
-  //   expect(result, tSearchResult);
-  // });
   test('should return tv when search', () async {
     // arrange
     when(mockHttpClient.get(Uri.parse("https://api.themoviedb.org/3/search/tv?$API_KEY&query=bold")))

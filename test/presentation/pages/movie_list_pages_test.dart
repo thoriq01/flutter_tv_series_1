@@ -28,6 +28,8 @@ import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/test_helper.mocks.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late MockMovieRepository _movieRepository;
   late GetPopularMovie getPopularMoviesBloc;
   late GetTopRatedMovie getTopRatedMoviesBloc;

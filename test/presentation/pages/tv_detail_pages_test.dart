@@ -17,6 +17,8 @@ import 'package:mockito/mockito.dart';
 import '../../helpers/test_helper.mocks.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late MockMovieRepository repository;
   late TvSeries tvSeries;
   late WatchListsMovie watchListsMovie;

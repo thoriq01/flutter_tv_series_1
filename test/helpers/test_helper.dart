@@ -4,6 +4,7 @@ import 'package:dicoding_tv_series/data/source/online/movie_online_data_source.d
 import 'package:dicoding_tv_series/domain/repositories/movie_repositorie.dart';
 import 'package:mockito/annotations.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 
 @GenerateMocks([
   MovieRepository,
@@ -11,6 +12,7 @@ import 'package:http/http.dart' as http;
   MovieLocalDataSource,
   DatabaseHelper,
 ], customMocks: [
-  MockSpec<http.Client>(as: #MockHttpClient)
+  MockSpec<http.Client>(as: #MockHttpClient),
+  MockSpec<IOClient>(as: #MockIOClient),
 ])
 void main() {}
