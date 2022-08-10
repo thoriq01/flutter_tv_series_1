@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dartz/dartz.dart';
 import 'package:dicoding_tv_series/domain/entities/cast.dart';
 import 'package:dicoding_tv_series/domain/entities/genre.dart';
 import 'package:dicoding_tv_series/domain/entities/movie_detail.dart';
@@ -12,13 +11,11 @@ import 'package:dicoding_tv_series/presentation/bloc/movie_cast_bloc/movie_cast_
 import 'package:dicoding_tv_series/presentation/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_recomendation_bloc/movie_recomendation_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
-import 'package:dicoding_tv_series/presentation/pages/movie_detail.dart';
 import 'package:dicoding_tv_series/presentation/pages/tv_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mockito/mockito.dart';
 import '../../dummy_data/dummy_objects.dart';
 import '../../helpers/test_helper.mocks.dart';
 

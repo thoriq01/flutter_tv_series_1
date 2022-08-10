@@ -4,8 +4,6 @@ import 'package:dicoding_tv_series/presentation/bloc/movie_popular_bloc/movie_po
 import 'package:dicoding_tv_series/presentation/bloc/movie_top_rated_bloc/movie_top_rated_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
 import 'package:dicoding_tv_series/presentation/pages/movie_list.dart';
-import 'package:dicoding_tv_series/presentation/widget/tv_popular_widget.dart';
-import 'package:dicoding_tv_series/presentation/widget/tv_top_rated_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

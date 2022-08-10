@@ -19,7 +19,6 @@ import 'package:dicoding_tv_series/presentation/widget/title_content.dart';
 import 'package:dicoding_tv_series/presentation/widget/tv_now_playing_widget.dart';
 import 'package:dicoding_tv_series/presentation/widget/tv_popular_widget.dart';
 import 'package:dicoding_tv_series/presentation/widget/tv_top_rated_widget.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

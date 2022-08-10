@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dicoding_tv_series/common/failure.dart';
 import 'package:dicoding_tv_series/data/models/movie_detail_model.dart';
-import 'package:dicoding_tv_series/data/models/movie_model.dart';
 import 'package:dicoding_tv_series/data/models/movie_response.dart';
 import 'package:dicoding_tv_series/data/models/tv_response.dart';
 import 'package:dicoding_tv_series/data/source/online/movie_online_data_source.dart';
