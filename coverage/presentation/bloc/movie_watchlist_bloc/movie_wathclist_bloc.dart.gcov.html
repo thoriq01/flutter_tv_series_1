@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-10 06:41:06</td>
+            <td class="headerValue">2022-08-10 14:55:13</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -113,10 +113,10 @@
 <a name="51"><span class="lineNum">      51 </span>            :     });</a>
 <a name="52"><span class="lineNum">      52 </span>            :   }</a>
 <a name="53"><span class="lineNum">      53 </span>            : </a>
-<a name="54"><span class="lineNum">      54 </span><span class="lineCov">          3 :   _isAddedWatchList(CheckIsAddedMovieWatchlist event, Emitter&lt;MovieWathclistState&gt; emit) async {</span></a>
-<a name="55"><span class="lineNum">      55 </span><span class="lineCov">         12 :     final result = await _watchListsMovie.isAddWatchlist(event.id);</span></a>
+<a name="54"><span class="lineNum">      54 </span><span class="lineCov">          2 :   _isAddedWatchList(CheckIsAddedMovieWatchlist event, Emitter&lt;MovieWathclistState&gt; emit) async {</span></a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineCov">          8 :     final result = await _watchListsMovie.isAddWatchlist(event.id);</span></a>
 <a name="56"><span class="lineNum">      56 </span>            :     if (result) {</a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          6 :       emit(MovieWatchlistIsAdded());</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          4 :       emit(MovieWatchlistIsAdded());</span></a>
 <a name="58"><span class="lineNum">      58 </span>            :     } else {</a>
 <a name="59"><span class="lineNum">      59 </span><span class="lineCov">          2 :       emit(MovieWatchlistIsNotAdded());</span></a>
 <a name="60"><span class="lineNum">      60 </span>            :     }</a>

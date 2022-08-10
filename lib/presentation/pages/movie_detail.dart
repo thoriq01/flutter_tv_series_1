@@ -194,10 +194,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             // Text(state.movieDetail)
                           ],
                         );
-                      } else {
+                      } else if (state is MovieDetailError) {
                         return Center(
-                          child: Text(""),
+                          child: Text(state.message, style: TextStyle(color: Colors.white)),
                         );
+                      } else {
+                        return Container();
                       }
                     },
                   ),
@@ -250,6 +252,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               child: RecomendationWidget(movies: state.movies, tipe: widget.tipe!),
                             ),
                           ],
+                        );
+                      } else if (state is MovieRecomendationError) {
+                        return Center(
+                          child: Text(state.message, style: TextStyle(color: Colors.white)),
                         );
                       } else {
                         return Center(

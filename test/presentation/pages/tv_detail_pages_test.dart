@@ -62,7 +62,7 @@ void main() {
     await tester.pumpWidget(
       _makeShitPassed(tvRecomendationBloc, tvDetailBloc, movieWathclistBloc, testData),
     );
-    expect(find.byType(Center), findsWidgets);
+    expect(find.byType(Container), findsWidgets);
   });
 
   testWidgets("entah", (tester) async {

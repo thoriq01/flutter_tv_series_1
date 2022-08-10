@@ -3,6 +3,7 @@ import 'package:dicoding_tv_series/config/router/movie_route_name.dart';
 import 'package:dicoding_tv_series/config/router/movie_router.dart';
 import 'package:dicoding_tv_series/domain/entities/movie.dart';
 import 'package:dicoding_tv_series/domain/entities/movie_detail.dart';
+import 'package:dicoding_tv_series/domain/entities/tv.dart';
 import 'package:dicoding_tv_series/presentation/bloc/movie_watchlist_bloc/movie_wathclist_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_detail_bloc/tv_detail_bloc.dart';
 import 'package:dicoding_tv_series/presentation/bloc/tv_recomendation_bloc/tv_recomendation_bloc.dart';
@@ -46,122 +47,18 @@ class _TvDetailPageState extends State<TvDetailPage> {
                   BlocBuilder<TvDetailBloc, TvDetailState>(
                     builder: (context, state) {
                       if (state is TvDetailLoading) {
-                        return MovieLoadingData();
+                        return Center(
+                          child: CircularProgressIndicator(color: Colors.white),
+                        );
                       } else if (state is TvDetailLoaded) {
                         var stateTv = state.tvDetail.tvToMovie();
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              alignment: Alignment.topLeft,
-                              height: 500,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    'https://image.tmdb.org/t/p/w500${stateTv.posterPath}',
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              child: IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
-                                },
-                                icon: Center(
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    decoration: BoxDecoration(color: Colors.black.withOpacity(0.5), shape: BoxShape.circle),
-                                    child: Icon(
-                                      Icons.arrow_back,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 200,
-                                  child: Text(
-                                    stateTv.title,
-                                    style: TextStyle(fontSize: 18, color: Colors.white),
-                                  ),
-                                ),
-                                SizedBox(width: 30),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.date_range_outlined,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                Text(
-                                  stateTv.releaseDate,
-                                  style: TextStyle(fontSize: 14, color: Colors.white),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-
-                            Row(
-                              children: [
-                                ...stateTv.genre.map((e) {
-                                  return Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10)),
-                                      margin: EdgeInsets.symmetric(horizontal: 5),
-                                      child: Text(
-                                        e.name,
-                                        style: TextStyle(fontSize: 14, color: Colors.white70),
-                                      ));
-                                })
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.star, color: Colors.orangeAccent, size: 20),
-                                Text(
-                                  (stateTv.voteAverage).toString(),
-                                  style: TextStyle(fontSize: 14, color: Colors.white70),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Overview",
-                                  style: TextStyle(fontSize: 18, color: Colors.white70),
-                                ),
-                                TvWatchList(movie: this.widget.movie!),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              stateTv.overview,
-                              style: TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                            // Text(state.movieDetail)
-                          ],
+                        return TvDetailWidget(stateTv: stateTv, movie: widget.movie!);
+                      } else if (state is TvDetailError) {
+                        return Center(
+                          child: Text(state.error, style: TextStyle(color: Colors.white)),
                         );
                       } else {
-                        return Center(
-                          child: Text(""),
-                        );
+                        return Container();
                       }
                     },
                   ),
@@ -188,10 +85,12 @@ class _TvDetailPageState extends State<TvDetailPage> {
                             ),
                           ],
                         );
-                      } else {
+                      } else if (state is TvRecomendationError) {
                         return Center(
-                          child: Text(""),
+                          child: Text(state.error, style: TextStyle(color: Colors.white)),
                         );
+                      } else {
+                        return Container();
                       }
                     },
                   ),
@@ -201,6 +100,129 @@ class _TvDetailPageState extends State<TvDetailPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class TvDetailWidget extends StatelessWidget {
+  final Movie stateTv;
+  final MovieDetail movie;
+  final bool test;
+  const TvDetailWidget({Key? key, required this.stateTv, required this.movie, this.test = false}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Container(
+          alignment: Alignment.topLeft,
+          height: 500,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(
+                'https://image.tmdb.org/t/p/w500${stateTv.posterPath}',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              if (test == false) {
+                Navigator.pop(context);
+                context.read<MovieWathclistBloc>().add(LoadMovieWatchlist());
+              }
+            },
+            icon: Center(
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(color: Colors.black.withOpacity(0.5), shape: BoxShape.circle),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: 200,
+              child: Text(
+                stateTv.title!,
+                style: TextStyle(fontSize: 18, color: Colors.white),
+              ),
+            ),
+            SizedBox(width: 30),
+          ],
+        ),
+        SizedBox(height: 10),
+
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.date_range_outlined,
+              color: Colors.white,
+              size: 20,
+            ),
+            Text(
+              stateTv.releaseDate!,
+              style: TextStyle(fontSize: 14, color: Colors.white),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+
+        Row(
+          children: [
+            ...stateTv.genre!.map((e) {
+              return Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10)),
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  child: Text(
+                    e.name,
+                    style: TextStyle(fontSize: 14, color: Colors.white70),
+                  ));
+            })
+          ],
+        ),
+        SizedBox(height: 20),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.star, color: Colors.orangeAccent, size: 20),
+            Text(
+              (stateTv.voteAverage).toString(),
+              style: TextStyle(fontSize: 14, color: Colors.white70),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Overview",
+              style: TextStyle(fontSize: 18, color: Colors.white70),
+            ),
+            test == false ? TvWatchList(movie: movie) : Container(),
+          ],
+        ),
+        SizedBox(height: 10),
+        Text(
+          stateTv.overview!,
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+        // Text(state.movieDetail)
+      ],
     );
   }
 }
