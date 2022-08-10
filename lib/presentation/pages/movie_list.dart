@@ -169,7 +169,7 @@ class MovieWidget extends StatelessWidget {
         return MovieSearchWidget(movies: state.movies);
       } else if (state is MovieSearchBlocError) {
         return Center(
-          child: Text(state.message),
+          child: Text(state.message, style: TextStyle(color: Colors.red)),
         );
       } else if (state is MovieSearchBlocLoading) {
         return Center(
@@ -277,7 +277,7 @@ class TvWidget extends StatelessWidget {
         return TvSearchWidget(movies: movies);
       } else if (state is TvSearchError) {
         return Center(
-          child: Text(state.message),
+          child: Text(state.message, style: TextStyle(color: Colors.red)),
         );
       } else if (state is TvSearchLoading) {
         return Center(
