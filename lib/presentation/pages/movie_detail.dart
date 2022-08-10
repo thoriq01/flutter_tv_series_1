@@ -120,21 +120,26 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               ],
                             ),
                             SizedBox(height: 10),
-
-                            Row(
-                              children: [
-                                ...state.movieDetail.genres!.map((e) {
+                            Container(
+                              height: 25,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
                                   return Container(
-                                      padding: EdgeInsets.all(5),
-                                      decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10)),
-                                      margin: EdgeInsets.symmetric(horizontal: 5),
-                                      child: Text(
-                                        e.name,
-                                        style: TextStyle(fontSize: 14, color: Colors.white70),
-                                      ));
-                                })
-                              ],
+                                    padding: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(10)),
+                                    margin: EdgeInsets.symmetric(horizontal: 5),
+                                    child: Text(
+                                      state.movieDetail.genres![index].name,
+                                      style: TextStyle(fontSize: 14, color: Colors.white70),
+                                    ),
+                                  );
+                                },
+                                itemCount: state.movieDetail.genres!.length,
+                                shrinkWrap: true,
+                              ),
                             ),
+
                             SizedBox(height: 20),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
